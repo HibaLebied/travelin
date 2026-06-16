@@ -37,6 +37,7 @@ public class TripDetailActivity extends AppCompatActivity {
 
     private long tripId;
     private String tripName;
+    private String tripDates;
     private String hotelPhone;
     private TripDao tripDao;
     private MapView mapView;
@@ -53,7 +54,7 @@ public class TripDetailActivity extends AppCompatActivity {
 
         tripId = getIntent().getLongExtra(EXTRA_TRIP_ID, 0);
         tripName = getIntent().getStringExtra(EXTRA_TRIP_NAME);
-        String tripDates = getIntent().getStringExtra(EXTRA_TRIP_DATES);
+        tripDates = getIntent().getStringExtra(EXTRA_TRIP_DATES);
         hotelPhone = getIntent().getStringExtra(EXTRA_HOTEL_PHONE);
         int imageRes = getIntent().getIntExtra(EXTRA_TRIP_IMAGE, R.drawable.travel_beach_bg);
         tripDao = new TripDao(this);
@@ -308,10 +309,52 @@ public class TripDetailActivity extends AppCompatActivity {
     }
 
     private void shareTrip() {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Mon voyage : " + (TextUtils.isEmpty(tripName) ? "Travelin" : tripName));
-        startActivity(Intent.createChooser(intent, "Partager le voyage"));
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("smsto:"));
+        intent.putExtra("sms_body", buildTripSummary());
+        startActivity(Intent.createChooser(intent, "Partager le recap par SMS"));
+    }
+
+    private String buildTripSummary() {
+        StringBuilder summary = new StringBuilder();
+        summary.append("Recap voyage : ")
+                .append(TextUtils.isEmpty(tripName) ? "Travelin" : tripName)
+                .append("\n");
+
+        if (!TextUtils.isEmpty(tripDates)) {
+            summary.append("Dates : ").append(tripDates).append("\n");
+        }
+
+        List<TripStep> steps = tripDao.getStepsForTrip(tripId);
+        if (steps.isEmpty()) {
+            summary.append("\nAucune etape ajoutee.");
+            return summary.toString();
+        }
+
+        summary.append("\nEtapes :");
+        for (int i = 0; i < steps.size(); i++) {
+            TripStep step = steps.get(i);
+            summary.append("\n").append(i + 1).append(". ")
+                    .append(TextUtils.isEmpty(step.getLocationName()) ? "Etape" : step.getLocationName());
+
+            String dateTime = formatStepDateTime(step);
+            if (!TextUtils.isEmpty(dateTime) && !"Date a definir".equals(dateTime)) {
+                summary.append(" - ").append(dateTime);
+            }
+
+            if (!TextUtils.isEmpty(step.getDescription())) {
+                summary.append("\n   ").append(step.getDescription());
+            }
+
+            if (step.hasCoordinates()) {
+                summary.append("\n   Position : ")
+                        .append(step.getLatitude())
+                        .append(", ")
+                        .append(step.getLongitude());
+            }
+        }
+
+        return summary.toString();
     }
 
     private void callHotel() {
