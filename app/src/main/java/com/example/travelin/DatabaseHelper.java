@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "travelin.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public static final String TABLE_TRIPS = "trips";
     public static final String COL_ID = "id";
@@ -24,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_CREATED_AT = "created_at";
     public static final String TABLE_STEPS = "steps";
     public static final String TABLE_STEP_PHOTOS = "step_photos";
+    public static final String TABLE_NOTIFICATIONS = "notifications";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,12 +48,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COL_CREATED_AT + " TEXT NOT NULL"
                 + ")");
         createStepTables(db);
+        createNotificationsTable(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
             createStepTables(db);
+        }
+        if (oldVersion < 3) {
+            createNotificationsTable(db);
         }
     }
 
@@ -76,6 +81,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "photo_uri TEXT NOT NULL, "
                 + "created_at INTEGER NOT NULL, "
                 + "FOREIGN KEY(step_id) REFERENCES " + TABLE_STEPS + "(id) ON DELETE CASCADE"
+                + ")");
+    }
+
+    private void createNotificationsTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS + " ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "title TEXT, "
+                + "message TEXT, "
+                + "type TEXT, "
+                + "related_id INTEGER, "
+                + "created_at TEXT, "
+                + "is_read INTEGER DEFAULT 0"
                 + ")");
     }
 }

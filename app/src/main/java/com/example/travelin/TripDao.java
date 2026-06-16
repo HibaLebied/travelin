@@ -130,7 +130,7 @@ public class TripDao {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.query(
                 DatabaseHelper.TABLE_STEPS,
-                new String[]{"id", "location_name", "description", "date", "time", "latitude", "longitude"},
+                new String[]{"id", "trip_id", "location_name", "description", "date", "time", "latitude", "longitude"},
                 "trip_id=?",
                 new String[]{String.valueOf(tripId)},
                 null,
@@ -141,18 +141,49 @@ public class TripDao {
             while (cursor.moveToNext()) {
                 steps.add(new TripStep(
                         cursor.getLong(0),
-                        cursor.getString(1),
+                        cursor.getLong(1),
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getString(4),
-                        cursor.isNull(5) ? null : cursor.getDouble(5),
-                        cursor.isNull(6) ? null : cursor.getDouble(6)
+                        cursor.getString(5),
+                        cursor.isNull(6) ? null : cursor.getDouble(6),
+                        cursor.isNull(7) ? null : cursor.getDouble(7)
                 ));
             }
         } finally {
             cursor.close();
         }
         return steps;
+    }
+
+    public TripStep getStepById(long stepId) {
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_STEPS,
+                new String[]{"id", "trip_id", "location_name", "description", "date", "time", "latitude", "longitude"},
+                "id=?",
+                new String[]{String.valueOf(stepId)},
+                null,
+                null,
+                null
+        );
+        try {
+            if (cursor.moveToFirst()) {
+                return new TripStep(
+                        cursor.getLong(0),
+                        cursor.getLong(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.isNull(6) ? null : cursor.getDouble(6),
+                        cursor.isNull(7) ? null : cursor.getDouble(7)
+                );
+            }
+        } finally {
+            cursor.close();
+        }
+        return null;
     }
 
     public List<Trip> getTripsForHome(String userId) {
@@ -186,6 +217,27 @@ public class TripDao {
         applySections(past, "VOYAGES PASSES");
         upcoming.addAll(past);
         return upcoming;
+    }
+
+    public Trip getTripById(long tripId) {
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_TRIPS,
+                null,
+                DatabaseHelper.COL_ID + "=?",
+                new String[]{String.valueOf(tripId)},
+                null,
+                null,
+                null
+        );
+        try {
+            if (cursor.moveToFirst()) {
+                return fromCursor(cursor);
+            }
+        } finally {
+            cursor.close();
+        }
+        return null;
     }
 
     private Trip fromCursor(Cursor cursor) {

@@ -349,7 +349,11 @@ public class AddTripActivity extends AppCompatActivity {
         trip.setCoverPhotoPath(selectedCoverPhotoUri);
         trip.setCreatedAt(String.valueOf(new Date().getTime()));
 
-        return tripDao.insertTrip(trip);
+        long tripId = tripDao.insertTrip(trip);
+        if (tripId != -1) {
+            TripReminderScheduler.scheduleTripNotifications(this, tripId, trip.getStartDate(), trip.getEndDate());
+        }
+        return tripId;
     }
 
     private boolean validateRequiredFields() {

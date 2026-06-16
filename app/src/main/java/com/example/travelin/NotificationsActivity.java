@@ -1,7 +1,8 @@
 package com.example.travelin;
 
 import android.Manifest;
-import android.content.pm.ApplicationInfo;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,15 +16,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsActivity extends AppCompatActivity {
+    private NotificationDao notificationDao;
+    private NotificationAdapter adapter;
+    private List<NotificationItem> notifications;
     private final ActivityResultLauncher<String> notificationPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-                if (granted) {
-                    showTestNotificationOnce();
-                }
             });
 
     @Override
@@ -31,16 +31,41 @@ public class NotificationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
+        notificationDao = new NotificationDao(this);
         ImageButton backButton = findViewById(R.id.btn_notifications_back);
         RecyclerView recyclerView = findViewById(R.id.recycler_notifications);
 
         backButton.setOnClickListener(v -> finish());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new NotificationAdapter(createNotifications(), item ->
-                Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show()));
+        notifications = createNotifications(this);
+        adapter = new NotificationAdapter(notifications, item -> handleNotificationClick(this, item, adapter));
+        recyclerView.setAdapter(adapter);
 
         NotificationHelper.createNotificationChannel(this);
         requestNotificationPermissionIfNeeded();
+        handleExternalNotificationIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleExternalNotificationIntent(intent);
+    }
+
+    private void handleExternalNotificationIntent(Intent intent) {
+        if (intent == null || !intent.hasExtra(NotificationHelper.EXTRA_NOTIFICATION_ID)) {
+            return;
+        }
+        long notificationId = intent.getLongExtra(NotificationHelper.EXTRA_NOTIFICATION_ID, 0);
+        notificationDao.markAsRead(notificationId);
+        reloadNotifications();
+    }
+
+    private void reloadNotifications() {
+        notifications.clear();
+        notifications.addAll(createNotifications(this));
+        adapter.notifyDataSetChanged();
     }
 
     private void requestNotificationPermissionIfNeeded() {
@@ -48,72 +73,75 @@ public class NotificationsActivity extends AppCompatActivity {
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-        } else {
-            showTestNotificationOnce();
         }
     }
 
-    private void showTestNotificationOnce() {
-        if ((getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) == 0) {
+    static List<NotificationItem> createNotifications(Context context) {
+        return new NotificationDao(context).getNotifications();
+    }
+
+    static void handleNotificationClick(Context context, NotificationItem item, NotificationAdapter adapter) {
+        new NotificationDao(context).markAsRead(item.getId());
+        item.setUnread(false);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+
+        String type = item.getType();
+        if (NotificationHelper.TYPE_DEPARTURE_TOMORROW.equals(type)
+                || NotificationHelper.TYPE_TRIP_TODAY.equals(type)
+                || NotificationHelper.TYPE_TRIP_FINISHED.equals(type)) {
+            if (item.getRelatedId() > 0) {
+                openTripDetail(context, item.getRelatedId());
+            } else {
+                Toast.makeText(context, item.getDescription(), Toast.LENGTH_SHORT).show();
+            }
             return;
         }
-        boolean sent = getPreferences(MODE_PRIVATE).getBoolean("trip_reminder_test_sent", false);
-        if (!sent) {
-            NotificationHelper.showTripReminderNotification(this);
-            getPreferences(MODE_PRIVATE).edit().putBoolean("trip_reminder_test_sent", true).apply();
+
+        if (NotificationHelper.TYPE_STEP_TODAY.equals(type)
+                || NotificationHelper.TYPE_ADD_STEP_PHOTOS.equals(type)) {
+            if (item.getRelatedId() > 0) {
+                openStepEditor(context, item.getRelatedId());
+            } else {
+                Toast.makeText(context, item.getDescription(), Toast.LENGTH_SHORT).show();
+            }
+            return;
         }
+
+        Toast.makeText(context, item.getDescription(), Toast.LENGTH_SHORT).show();
     }
 
-    static List<NotificationItem> createNotifications() {
-        List<NotificationItem> items = new ArrayList<>();
-        items.add(new NotificationItem(
-                "Aujourd'hui",
-                "Prochain voyage",
-                "Votre voyage à Marrakech commence dans 2 jours.",
-                "09:30",
-                R.drawable.ic_notification_trip,
-                true
-        ));
-        items.add(new NotificationItem(
-                null,
-                "Rappel",
-                "N'oubliez pas de préparer vos documents avant le départ.",
-                "08:15",
-                R.drawable.ic_notification_bell,
-                true
-        ));
-        items.add(new NotificationItem(
-                null,
-                "Nouvelle étape",
-                "Ajoutez vos étapes prévues pour mieux organiser votre voyage.",
-                "Hier",
-                R.drawable.ic_notification_location,
-                true
-        ));
-        items.add(new NotificationItem(
-                null,
-                "Synchronisation terminée",
-                "Vos données ont été synchronisées avec succès.",
-                "Hier",
-                R.drawable.ic_notification_sync,
-                true
-        ));
-        items.add(new NotificationItem(
-                "27 mai 2024",
-                "Carte d'embarquement disponible",
-                "Votre carte d'embarquement pour Paris est maintenant disponible.",
-                "27 mai",
-                R.drawable.ic_notification_ticket,
-                true
-        ));
-        items.add(new NotificationItem(
-                "25 mai 2024",
-                "Mise à jour de l'itinéraire",
-                "Le programme de votre voyage à Lisbonne a été mis à jour.",
-                "25 mai",
-                R.drawable.ic_notification_info,
-                true
-        ));
-        return items;
+    private static void openTripDetail(Context context, long tripId) {
+        Trip trip = new TripDao(context).getTripById(tripId);
+        Intent intent = new Intent(context, TripDetailActivity.class);
+        intent.putExtra(TripDetailActivity.EXTRA_TRIP_ID, tripId);
+        if (trip != null) {
+            intent.putExtra(TripDetailActivity.EXTRA_TRIP_NAME, trip.getName());
+            intent.putExtra(TripDetailActivity.EXTRA_TRIP_DATES, trip.getDates());
+            intent.putExtra(TripDetailActivity.EXTRA_TRIP_IMAGE, trip.getImageResId());
+            intent.putExtra(TripDetailActivity.EXTRA_HOTEL_PHONE, trip.getHotelPhone());
+        }
+        context.startActivity(intent);
+    }
+
+    private static void openStepEditor(Context context, long stepId) {
+        TripStep step = new TripDao(context).getStepById(stepId);
+        if (step == null) {
+            Toast.makeText(context, "Etape introuvable", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(context, AddStepActivity.class);
+        intent.putExtra(AddStepActivity.EXTRA_TRIP_ID, step.getTripId());
+        intent.putExtra(AddStepActivity.EXTRA_STEP_ID, step.getId());
+        intent.putExtra(AddStepActivity.EXTRA_STEP_NAME, step.getLocationName());
+        intent.putExtra(AddStepActivity.EXTRA_STEP_DESCRIPTION, step.getDescription());
+        intent.putExtra(AddStepActivity.EXTRA_STEP_DATE, step.getDate());
+        intent.putExtra(AddStepActivity.EXTRA_STEP_TIME, step.getTime());
+        if (step.hasCoordinates()) {
+            intent.putExtra(AddStepActivity.EXTRA_STEP_LATITUDE, step.getLatitude());
+            intent.putExtra(AddStepActivity.EXTRA_STEP_LONGITUDE, step.getLongitude());
+        }
+        context.startActivity(intent);
     }
 }

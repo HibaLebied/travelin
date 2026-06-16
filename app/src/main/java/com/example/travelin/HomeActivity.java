@@ -1,14 +1,17 @@
 package com.example.travelin;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -32,7 +35,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -81,6 +87,9 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout[] navigationItems;
     private ImageView[] navigationIcons;
     private TextView[] navigationLabels;
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +133,19 @@ public class HomeActivity extends AppCompatActivity {
 
         replaceBottomNavigation();
         openRequestedNavigationItem(getIntent());
+        NotificationHelper.createNotificationChannel(this);
+        requestNotificationPermissionIfNeeded();
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (!NotificationHelper.areNotificationsEnabled(this)) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
     @Override
@@ -252,31 +274,33 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showNotificationsContent() {
         hideSecondaryContent();
-        if (notificationsContent == null) {
-            notificationsContent = LayoutInflater.from(this)
-                    .inflate(R.layout.activity_notifications, rootContainer, false);
-
-            ImageButton backButton = notificationsContent.findViewById(R.id.btn_notifications_back);
-            RecyclerView recyclerView = notificationsContent.findViewById(R.id.recycler_notifications);
-            backButton.setOnClickListener(view -> {
-                selectNavigationItem(0);
-                showHomeContent();
-            });
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new NotificationAdapter(
-                    NotificationsActivity.createNotifications(),
-                    item -> Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show()
-            ));
-
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            );
-            params.bottomMargin = dp(83);
-            rootContainer.addView(notificationsContent, params);
-        } else {
-            notificationsContent.setVisibility(View.VISIBLE);
+        if (notificationsContent != null) {
+            rootContainer.removeView(notificationsContent);
         }
+        notificationsContent = LayoutInflater.from(this)
+                .inflate(R.layout.activity_notifications, rootContainer, false);
+
+        ImageButton backButton = notificationsContent.findViewById(R.id.btn_notifications_back);
+        RecyclerView recyclerView = notificationsContent.findViewById(R.id.recycler_notifications);
+        backButton.setOnClickListener(view -> {
+            selectNavigationItem(0);
+            showHomeContent();
+        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final NotificationAdapter[] notificationAdapterRef = new NotificationAdapter[1];
+        NotificationAdapter notificationAdapter = new NotificationAdapter(
+                NotificationsActivity.createNotifications(this),
+                item -> NotificationsActivity.handleNotificationClick(this, item, notificationAdapterRef[0])
+        );
+        notificationAdapterRef[0] = notificationAdapter;
+        recyclerView.setAdapter(notificationAdapter);
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        params.bottomMargin = dp(83);
+        rootContainer.addView(notificationsContent, params);
 
         addTripButton.setVisibility(View.GONE);
         navigationBar.bringToFront();

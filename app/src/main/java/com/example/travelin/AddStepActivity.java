@@ -457,6 +457,12 @@ public class AddStepActivity extends AppCompatActivity {
             tripDao.insertStepPhoto(savedStepId, uri.toString());
         }
 
+        TripReminderScheduler.scheduleStepNotifications(
+                this,
+                savedStepId,
+                dateInput.getText().toString().trim()
+        );
+
         Toast.makeText(this, stepId > 0 ? "Etape modifiee" : "Etape enregistree", Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();

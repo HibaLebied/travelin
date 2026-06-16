@@ -2,6 +2,7 @@ package com.example.travelin;
 
 public class TripStep {
     private final long id;
+    private final long tripId;
     private final String locationName;
     private final String description;
     private final String date;
@@ -9,9 +10,10 @@ public class TripStep {
     private final Double latitude;
     private final Double longitude;
 
-    public TripStep(long id, String locationName, String description, String date, String time,
+    public TripStep(long id, long tripId, String locationName, String description, String date, String time,
                     Double latitude, Double longitude) {
         this.id = id;
+        this.tripId = tripId;
         this.locationName = locationName;
         this.description = description;
         this.date = date;
@@ -22,6 +24,10 @@ public class TripStep {
 
     public long getId() {
         return id;
+    }
+
+    public long getTripId() {
+        return tripId;
     }
 
     public String getLocationName() {
