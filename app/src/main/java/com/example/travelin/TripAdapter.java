@@ -3,6 +3,9 @@ package com.example.travelin;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Outline;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,15 +62,35 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         }
         holder.nameText.setText(trip.getName());
         holder.metaText.setText(trip.getDates() + "    " + trip.getLocations());
-        holder.tripImage.setImageResource(trip.getImageResId());
-        if ("VOYAGES PASSES".equals(trip.getSection()) || "PAST TRIPS".equals(trip.getSection())) {
-            ColorMatrix matrix = new ColorMatrix();
-            matrix.setSaturation(0f);
-            holder.tripImage.setColorFilter(new ColorMatrixColorFilter(matrix));
-            holder.tripImage.setAlpha(0.78f);
+        boolean pastTrip = isPastTrip(trip);
+        applyTripImageStyle(holder.tripImage, pastTrip);
+        RequestListener<Drawable> styleListener = new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                applyTripImageStyle(holder.tripImage, pastTrip);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.tripImage.post(() -> applyTripImageStyle(holder.tripImage, pastTrip));
+                return false;
+            }
+        };
+        if (!TextUtils.isEmpty(trip.getCoverPhotoPath())) {
+            Glide.with(holder.tripImage.getContext())
+                    .load(Uri.parse(trip.getCoverPhotoPath()))
+                    .placeholder(trip.getImageResId())
+                    .error(trip.getImageResId())
+                    .centerCrop()
+                    .listener(styleListener)
+                    .into(holder.tripImage);
         } else {
-            holder.tripImage.clearColorFilter();
-            holder.tripImage.setAlpha(1f);
+            Glide.with(holder.tripImage.getContext())
+                    .load(trip.getImageResId())
+                    .centerCrop()
+                    .listener(styleListener)
+                    .into(holder.tripImage);
         }
         holder.tripCard.setClipToOutline(true);
         holder.tripCard.setOutlineProvider(new ViewOutlineProvider() {
@@ -77,6 +107,23 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         });
     }
 
+    private boolean isPastTrip(Trip trip) {
+        return Trip.TYPE_PAST.equals(trip.getTripType())
+                || "VOYAGES PASSES".equals(trip.getSection())
+                || "PAST TRIPS".equals(trip.getSection());
+    }
+
+    private void applyTripImageStyle(ImageView imageView, boolean pastTrip) {
+        if (pastTrip) {
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0f);
+            imageView.setColorFilter(new ColorMatrixColorFilter(matrix));
+            imageView.setAlpha(0.78f);
+        } else {
+            imageView.clearColorFilter();
+            imageView.setAlpha(1f);
+        }
+    }
     @Override
     public int getItemCount() {
         return trips.size();

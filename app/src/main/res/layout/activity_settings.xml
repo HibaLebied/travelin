@@ -12,7 +12,7 @@
         android:fadeScrollbars="false"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingBottom="32dp"
+        android:paddingBottom="12dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -44,7 +44,7 @@
                     android:paddingRight="56dp"
                     android:text="Profil"
                     android:textColor="#071827"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
             </FrameLayout>
 
@@ -70,8 +70,19 @@
                         android:background="@drawable/settings_avatar_background"
                         android:padding="24dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_settings_profile"
-                        app:tint="@color/primary" />
+                        android:src="@drawable/ic_settings_profile" />
+
+                    <TextView
+                        android:id="@+id/txt_profile_initials"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/settings_avatar_background"
+                        android:gravity="center"
+                        android:textColor="@color/primary"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
                     <ImageButton
                         android:id="@+id/btn_edit_photo"
@@ -105,12 +116,14 @@
                         android:id="@+id/txt_profile_email"
                         style="@style/ProfileInlineInfo"
                         android:drawableStart="@drawable/ic_settings_email"
+                        android:drawableTint="#667085"
                         android:text="sarah.benali@email.com" />
 
                     <TextView
                         android:id="@+id/txt_profile_city"
                         style="@style/ProfileInlineInfo"
                         android:drawableStart="@drawable/ic_settings_location"
+                        android:drawableTint="#667085"
                         android:text="Casablanca, Maroc" />
                 </LinearLayout>
             </LinearLayout>
@@ -163,7 +176,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="0dp"
                 android:background="@drawable/settings_card_background"
                 android:elevation="3dp"
                 android:orientation="vertical"

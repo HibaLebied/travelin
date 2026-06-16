@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,11 +57,46 @@ public class SettingsActivity extends AppCompatActivity {
 
         String photoUri = profilePreferences.getPhotoUri();
         ImageView avatar = findViewById(R.id.img_profile_avatar);
+        TextView initials = findViewById(R.id.txt_profile_initials);
         if (!TextUtils.isEmpty(photoUri)) {
-            avatar.setImageURI(Uri.parse(photoUri));
+            setProfileAvatarSafely(avatar, initials, photoUri);
         } else {
-            avatar.setImageResource(R.drawable.ic_settings_profile);
+            showProfileInitials(avatar, initials);
         }
+    }
+
+    private void setProfileAvatarSafely(ImageView avatar, TextView initials, String photoUri) {
+        try {
+            avatar.setPadding(0, 0, 0, 0);
+            Glide.with(this)
+                    .load(Uri.parse(photoUri))
+                    .circleCrop()
+                    .into(avatar);
+            avatar.setVisibility(View.VISIBLE);
+            initials.setVisibility(View.GONE);
+        } catch (SecurityException exception) {
+            profilePreferences.putString("photo_uri", "");
+            showProfileInitials(avatar, initials);
+        }
+    }
+
+    private void showProfileInitials(ImageView avatar, TextView initials) {
+        avatar.setPadding(24, 24, 24, 24);
+        avatar.setVisibility(View.GONE);
+        initials.setText(getInitials(profilePreferences.getFullName()));
+        initials.setVisibility(View.VISIBLE);
+    }
+
+    private String getInitials(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return "?";
+        }
+        String[] parts = name.trim().split("\\s+");
+        if (parts.length == 1) {
+            return parts[0].substring(0, 1).toUpperCase(java.util.Locale.ROOT);
+        }
+        return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1))
+                .toUpperCase(java.util.Locale.ROOT);
     }
 
     private void bindStats() {
@@ -72,12 +108,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupRows() {
-        bindRow(findViewById(R.id.row_profile), R.drawable.ic_settings_profile, "Informations personnelles", "Gérer vos informations");
-        bindRow(findViewById(R.id.row_preferences), R.drawable.ic_settings_language, "Préférences", "Langue, devise, notifications");
-        bindRow(findViewById(R.id.row_sync), R.drawable.ic_settings_cloud, "Données et synchronisation", "Sauvegarde et restauration");
-        bindRow(findViewById(R.id.row_help), R.drawable.ic_settings_help, "Aide et support", "FAQ, contact, politiques");
-        bindRow(findViewById(R.id.row_privacy), R.drawable.ic_settings_shield, "Confidentialité et sécurité", "Gérer vos données personnelles");
-        bindRow(findViewById(R.id.row_logout), R.drawable.ic_settings_logout, "Déconnexion", "Se déconnecter de votre compte");
+        bindRow(findViewById(R.id.row_profile), R.drawable.profile_menu_icon_profile, "Informations personnelles", "Gérer vos informations");
+        bindRow(findViewById(R.id.row_preferences), R.drawable.profile_menu_icon_preferences, "Préférences", "Langue, devise, notifications");
+        bindRow(findViewById(R.id.row_sync), R.drawable.profile_menu_icon_sync, "Données et synchronisation", "Sauvegarde et restauration");
+        bindRow(findViewById(R.id.row_help), R.drawable.profile_menu_icon_help, "Aide et support", "FAQ, contact, politiques");
+        bindRow(findViewById(R.id.row_privacy), R.drawable.profile_menu_icon_privacy, "Confidentialité et sécurité", "Gérer vos données personnelles");
+        bindRow(findViewById(R.id.row_logout), R.drawable.profile_menu_icon_logout, "Déconnexion", "Se déconnecter de votre compte");
         findViewById(R.id.row_profile).setOnClickListener(v -> startActivity(new Intent(this, PersonalInfoActivity.class)));
         findViewById(R.id.btn_edit_photo).setOnClickListener(v -> startActivity(new Intent(this, PersonalInfoActivity.class)));
         findViewById(R.id.row_preferences).setOnClickListener(v -> startActivity(new Intent(this, PreferencesActivity.class)));

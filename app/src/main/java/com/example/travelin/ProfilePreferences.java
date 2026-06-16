@@ -20,15 +20,19 @@ public class ProfilePreferences {
     }
 
     public String getFullName() {
-        String saved = preferences.getString("full_name", "");
-        if (!TextUtils.isEmpty(saved)) {
-            return saved;
-        }
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null && !TextUtils.isEmpty(user.getDisplayName())) {
             return user.getDisplayName();
         }
-        return "Sarah Benali";
+        String saved = preferences.getString("full_name", "");
+        if (!TextUtils.isEmpty(saved)) {
+            return saved;
+        }
+        String email = getEmail();
+        if (!TextUtils.isEmpty(email) && email.contains("@")) {
+            return email.substring(0, email.indexOf('@'));
+        }
+        return "";
     }
 
     public String getEmail() {
@@ -44,7 +48,11 @@ public class ProfilePreferences {
     }
 
     public String getPhone() {
-        return preferences.getString("phone", "+212 6 12 34 56 78");
+        String phone = preferences.getString("phone", "");
+        if ("+212 6 12 34 56 78".equals(phone)) {
+            return "";
+        }
+        return phone;
     }
 
     public String getCity() {
@@ -52,7 +60,11 @@ public class ProfilePreferences {
     }
 
     public String getBirthDate() {
-        return preferences.getString("birth_date", "12 mars 1999");
+        String birthDate = preferences.getString("birth_date", "");
+        if ("12 mars 1999".equals(birthDate)) {
+            return "";
+        }
+        return birthDate;
     }
 
     public String getPhotoUri() {

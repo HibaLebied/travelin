@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.GradientDrawable;
@@ -15,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextUtils.TruncateAt;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -22,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.EditText;
@@ -96,16 +99,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        updateUserHeader();
         tripDao = new TripDao(this);
         searchInput = findViewById(R.id.input_search_trip);
         noTripsText = findViewById(R.id.txt_no_trips);
         exploreRepository = new ExploreRepository(this);
         profilePreferences = new ProfilePreferences(this);
+        updateUserHeader();
 
         RecyclerView tripsRecyclerView = findViewById(R.id.recycler_trips);
         tripsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tripsRecyclerView.setNestedScrollingEnabled(true);
+        tripsRecyclerView.setVerticalScrollBarEnabled(false);
         tripAdapter = new TripAdapter(new ArrayList<>(), trip -> {
             Intent intent = new Intent(this, TripDetailActivity.class);
             intent.putExtra(TripDetailActivity.EXTRA_TRIP_ID, trip.getId());
@@ -253,6 +257,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         selectNavigationItem(0);
+        findViewById(R.id.profile_header_avatar).setOnClickListener(view -> onNavigationItemClicked(4));
     }
 
     private void onNavigationItemClicked(int index) {
@@ -351,27 +356,27 @@ public class HomeActivity extends AppCompatActivity {
                 .setOnClickListener(view -> showLogoutSheet());
 
         bindProfileRow(profileContent.findViewById(R.id.row_profile),
-                R.drawable.ic_settings_profile,
+                R.drawable.profile_menu_icon_profile,
                 "Informations personnelles",
                 "Gérer vos informations");
         bindProfileRow(profileContent.findViewById(R.id.row_preferences),
-                R.drawable.ic_settings_language,
+                R.drawable.profile_menu_icon_preferences,
                 "Préférences",
                 "Langue, devise, notifications");
         bindProfileRow(profileContent.findViewById(R.id.row_sync),
-                R.drawable.ic_settings_cloud,
+                R.drawable.profile_menu_icon_sync,
                 "Données et synchronisation",
                 "Sauvegarde et restauration");
         bindProfileRow(profileContent.findViewById(R.id.row_help),
-                R.drawable.ic_settings_help,
+                R.drawable.profile_menu_icon_help,
                 "Aide et support",
                 "FAQ, contact, politiques");
         bindProfileRow(profileContent.findViewById(R.id.row_privacy),
-                R.drawable.ic_settings_shield,
+                R.drawable.profile_menu_icon_privacy,
                 "Confidentialité et sécurité",
                 "Gérer vos données personnelles");
         bindProfileRow(profileContent.findViewById(R.id.row_logout),
-                R.drawable.ic_settings_logout,
+                R.drawable.profile_menu_icon_logout,
                 "Déconnexion",
                 "Se déconnecter de votre compte");
 
@@ -389,11 +394,34 @@ public class HomeActivity extends AppCompatActivity {
 
         String photoUri = profilePreferences.getPhotoUri();
         ImageView avatar = profileContent.findViewById(R.id.img_profile_avatar);
+        TextView initials = profileContent.findViewById(R.id.txt_profile_initials);
         if (!TextUtils.isEmpty(photoUri)) {
-            avatar.setImageURI(Uri.parse(photoUri));
+            setProfileAvatarSafely(avatar, initials, photoUri);
         } else {
-            avatar.setImageResource(R.drawable.ic_settings_profile);
+            showProfileInitials(avatar, initials);
         }
+    }
+
+    private void setProfileAvatarSafely(ImageView avatar, TextView initials, String photoUri) {
+        try {
+            avatar.setPadding(0, 0, 0, 0);
+            Glide.with(this)
+                    .load(Uri.parse(photoUri))
+                    .circleCrop()
+                    .into(avatar);
+            avatar.setVisibility(View.VISIBLE);
+            initials.setVisibility(View.GONE);
+        } catch (SecurityException exception) {
+            profilePreferences.putString("photo_uri", "");
+            showProfileInitials(avatar, initials);
+        }
+    }
+
+    private void showProfileInitials(ImageView avatar, TextView initials) {
+        avatar.setPadding(dp(24), dp(24), dp(24), dp(24));
+        avatar.setVisibility(View.GONE);
+        initials.setText(getInitials(profilePreferences.getFullName()));
+        initials.setVisibility(View.VISIBLE);
     }
 
     private void bindProfileStats() {
@@ -449,22 +477,24 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showMemoriesContent() {
         hideSecondaryContent();
-        if (memoriesContent != null) {
-            rootContainer.removeView(memoriesContent);
+        if (memoriesContent == null) {
+            memoriesContent = createMemoriesView();
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            );
+            params.bottomMargin = dp(76);
+            rootContainer.addView(memoriesContent, params);
+        } else {
+            memoriesContent.setVisibility(View.VISIBLE);
         }
-        memoriesContent = createMemoriesView();
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        );
-        params.bottomMargin = dp(76);
-        rootContainer.addView(memoriesContent, params);
 
         addTripButton.setVisibility(View.GONE);
         navigationBar.bringToFront();
     }
 
     private View createMemoriesView() {
+        final int darkText = Color.rgb(5, 18, 49);
         LinearLayout screen = new LinearLayout(this);
         screen.setOrientation(LinearLayout.VERTICAL);
         screen.setBackgroundColor(Color.WHITE);
@@ -472,14 +502,11 @@ public class HomeActivity extends AppCompatActivity {
         FrameLayout header = new FrameLayout(this);
         header.setPadding(dp(12), 0, dp(12), 0);
         header.setBackgroundColor(Color.WHITE);
-        screen.addView(header, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(68)
-        ));
+        screen.addView(header, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(68)));
 
         ImageButton backButton = new ImageButton(this);
         backButton.setImageResource(R.drawable.ic_add_trip_back);
-        backButton.setImageTintList(ColorStateList.valueOf(Color.rgb(7, 56, 68)));
+        backButton.setImageTintList(ColorStateList.valueOf(NAV_ACTIVE_COLOR));
         TypedValue ripple = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true);
         backButton.setBackgroundResource(ripple.resourceId);
@@ -489,220 +516,366 @@ public class HomeActivity extends AppCompatActivity {
             selectNavigationItem(0);
             showHomeContent();
         });
-        FrameLayout.LayoutParams backParams = new FrameLayout.LayoutParams(
-                dp(48),
-                dp(48),
-                Gravity.START | Gravity.CENTER_VERTICAL
-        );
-        header.addView(backButton, backParams);
+        header.addView(backButton, new FrameLayout.LayoutParams(dp(48), dp(48), Gravity.START | Gravity.CENTER_VERTICAL));
 
-        TextView headerTitle = new TextView(this);
-        headerTitle.setText("Memories");
-        headerTitle.setTextColor(Color.rgb(7, 56, 68));
-        headerTitle.setTextSize(23);
-        headerTitle.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
+        TextView headerTitle = createText("Memories", 24, darkText, true);
         headerTitle.setGravity(Gravity.CENTER);
-        FrameLayout.LayoutParams titleParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER
-        );
-        header.addView(headerTitle, titleParams);
+        header.addView(headerTitle, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
 
         ScrollView scrollView = new ScrollView(this);
         scrollView.setFillViewport(true);
-        scrollView.setBackgroundColor(Color.rgb(245, 245, 245));
+        scrollView.setBackgroundColor(Color.WHITE);
         scrollView.setClipToPadding(false);
-        screen.addView(scrollView, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                1
-        ));
+        scrollView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        scrollView.setVerticalScrollBarEnabled(false);
+        screen.addView(scrollView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
 
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.setPadding(dp(8), dp(18), dp(8), dp(16));
-        scrollView.addView(content, new ScrollView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-
-        TextView subtitle = new TextView(this);
-        subtitle.setTextColor(Color.rgb(87, 99, 120));
-        subtitle.setTextSize(16);
-        subtitle.setPadding(dp(26), dp(6), dp(26), dp(22));
-        content.addView(subtitle, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-
-        GridLayout grid = new GridLayout(this);
-        grid.setColumnCount(2);
-        grid.setUseDefaultMargins(false);
-        content.addView(grid, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
+        content.setPadding(dp(18), dp(6), dp(18), dp(8));
+        scrollView.addView(content, new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         List<StepMemoryPhoto> memories = tripDao.getStepMemoryPhotos(getConnectedUserId());
-        subtitle.setText(memories.size() == 1
-                ? "1 photo souvenir"
-                : memories.size() + " photos souvenirs");
+        addRecentMemoriesSection(content, memories);
+        addJournalSection(content);
+        addFavoriteMomentsSection(content, memories);
+        addYearSection(content);
+        return screen;
+    }
+
+    private void addRecentMemoriesSection(LinearLayout content, List<StepMemoryPhoto> memories) {
+        addMemorySectionHeader(content, "Souvenirs recents");
+        HorizontalScrollView recentScroll = new HorizontalScrollView(this);
+        recentScroll.setHorizontalScrollBarEnabled(false);
+        recentScroll.setClipToPadding(false);
+        LinearLayout recentRow = new LinearLayout(this);
+        recentRow.setOrientation(LinearLayout.HORIZONTAL);
+        recentScroll.addView(recentRow, new HorizontalScrollView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         if (memories.isEmpty()) {
-            TextView emptyText = new TextView(this);
-            emptyText.setText("Aucune photo souvenir pour le moment");
-            emptyText.setTextColor(Color.rgb(87, 99, 120));
-            emptyText.setTextSize(16);
-            emptyText.setGravity(Gravity.CENTER);
-            emptyText.setPadding(dp(20), dp(50), dp(20), dp(50));
-            content.addView(emptyText, new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
-            return screen;
+            int[] recentImages = {R.drawable.add_trip_mountain_cover, R.drawable.travel_balloons_bg, R.drawable.travel_beach_bg};
+            String[] recentNames = {"Marrakech 2025", "Lisbonne 2024", "Paris 2023"};
+            String[] recentDates = {"12 avr. - 20 avr. 2025", "5 oct. - 13 oct. 2024", "18 mai - 25 mai 2023"};
+            String[] recentPhotos = {"48 photos", "72 photos", "56 photos"};
+            for (int i = 0; i < recentNames.length; i++) {
+                recentRow.addView(createRecentMemoryCard(recentImages[i], recentNames[i], recentDates[i], recentPhotos[i]));
+            }
+        } else {
+            int count = Math.min(5, memories.size());
+            for (int i = 0; i < count; i++) {
+                recentRow.addView(createRecentMemoryCard(memories.get(i)));
+            }
         }
 
-        int initialPhotoCount = Math.min(9, memories.size());
+        content.addView(recentScroll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    private void addJournalSection(LinearLayout content) {
+        addMemorySectionHeader(content, "Journal de voyage");
+        content.addView(createJournalCard(R.drawable.add_trip_mountain_cover, "Balade dans la medina", "Perdu dans les ruelles colorees de Marrakech. Des odeurs d'epices, des sourires partout...", "14 avr. 2025"));
+        content.addView(createJournalCard(R.drawable.travel_balloons_bg, "Coucher de soleil au desert", "Un moment suspendu dans le temps. Le ciel s'embrase et le silence est magique.", "16 avr. 2025"));
+    }
+
+    private void addFavoriteMomentsSection(LinearLayout content, List<StepMemoryPhoto> memories) {
+        addMemorySectionHeader(content, "Moments favoris");
+        GridLayout favoritesGrid = new GridLayout(this);
+        favoritesGrid.setColumnCount(2);
+        favoritesGrid.setUseDefaultMargins(false);
+        content.addView(favoritesGrid, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        if (memories.isEmpty()) {
+            int[] favoriteImages = {R.drawable.travel_beach_bg, R.drawable.add_trip_mountain_cover, R.drawable.travel_balloons_bg, R.drawable.travel_beach_bg, R.drawable.travel_balloons_bg, R.drawable.add_trip_mountain_cover};
+            String[] favoritePlaces = {"Chefchaouen", "Algarve, Portugal", "Cappadoce, Turquie", "Zanzibar, Tanzanie", "Merzouga, Maroc", "Santorin, Grece"};
+            for (int i = 0; i < favoritePlaces.length; i++) {
+                favoritesGrid.addView(createFavoriteMemoryCard(favoriteImages[i], favoritePlaces[i]));
+            }
+            return;
+        }
+
+        int initialPhotoCount = Math.min(6, memories.size());
         for (int index = 0; index < initialPhotoCount; index++) {
-            grid.addView(createMemoryTile(memories.get(index)));
+            favoritesGrid.addView(createMemoryTile(memories.get(index), dp(128)));
         }
 
-        TextView loadMoreButton = new TextView(this);
-        loadMoreButton.setText("Charger plus de photos");
-        loadMoreButton.setTextColor(Color.WHITE);
-        loadMoreButton.setTextSize(16);
-        loadMoreButton.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
+        TextView loadMoreButton = createText("Charger plus de photos", 16, Color.WHITE, true);
         loadMoreButton.setGravity(Gravity.CENTER);
         loadMoreButton.setClickable(true);
         loadMoreButton.setFocusable(true);
-        GradientDrawable loadMoreBackground = new GradientDrawable();
-        loadMoreBackground.setColor(NAV_ACTIVE_COLOR);
-        loadMoreBackground.setCornerRadius(dp(28));
-        loadMoreButton.setBackground(loadMoreBackground);
+        loadMoreButton.setBackground(createRoundedRect(NAV_ACTIVE_COLOR, dp(28), 0, 0));
         loadMoreButton.setElevation(dp(3));
         LinearLayout.LayoutParams loadMoreParams = new LinearLayout.LayoutParams(dp(226), dp(52));
         loadMoreParams.gravity = Gravity.CENTER_HORIZONTAL;
-        loadMoreParams.setMargins(0, dp(38), 0, dp(30));
+        loadMoreParams.setMargins(0, dp(28), 0, dp(30));
         content.addView(loadMoreButton, loadMoreParams);
         loadMoreButton.setVisibility(initialPhotoCount >= memories.size() ? View.GONE : View.VISIBLE);
         loadMoreButton.setOnClickListener(view -> {
-            int currentCount = grid.getChildCount();
+            int currentCount = favoritesGrid.getChildCount();
             int nextCount = Math.min(memories.size(), currentCount + 4);
             for (int index = currentCount; index < nextCount; index++) {
-                grid.addView(createMemoryTile(memories.get(index)));
+                favoritesGrid.addView(createMemoryTile(memories.get(index), dp(128)));
             }
-            subtitle.setText(nextCount == 1 ? "1 photo souvenir" : nextCount + " photos souvenirs");
             if (nextCount >= memories.size()) {
                 loadMoreButton.setVisibility(View.GONE);
             }
         });
+    }
 
-        return screen;
+    private void addMemorySectionHeader(LinearLayout parent, String title) {
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        rowParams.setMargins(0, dp(18), 0, dp(12));
+        parent.addView(row, rowParams);
+
+        TextView titleView = createText(title, 20, Color.rgb(5, 18, 49), true);
+        row.addView(titleView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+        TextView seeAll = createText("Voir tout  >", 15, NAV_ACTIVE_COLOR, false);
+        seeAll.setGravity(Gravity.CENTER_VERTICAL);
+        seeAll.setClickable(true);
+        seeAll.setFocusable(true);
+        row.addView(seeAll);
+    }
+
+    private View createRecentMemoryCard(StepMemoryPhoto memory) {
+        String title = TextUtils.isEmpty(memory.getStepName()) ? (TextUtils.isEmpty(memory.getTripName()) ? memory.getDestination() : memory.getTripName()) : memory.getStepName();
+        return createRecentMemoryCard(Uri.parse(memory.getPhotoUri()), title, memory.getDate(), "1 photo");
+    }
+
+    private View createRecentMemoryCard(int imageResId, String title, String date, String photos) {
+        return createRecentMemoryCard(null, imageResId, title, date, photos);
+    }
+
+    private View createRecentMemoryCard(Uri imageUri, String title, String date, String photos) {
+        return createRecentMemoryCard(imageUri, 0, title, date, photos);
+    }
+
+    private View createRecentMemoryCard(Uri imageUri, int imageResId, String title, String date, String photos) {
+        FrameLayout card = new FrameLayout(this);
+        card.setClipToOutline(true);
+        card.setOutlineProvider(createRoundOutlineProvider(18));
+        card.setElevation(dp(2));
+        card.setClickable(true);
+        card.setFocusable(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(230), dp(250));
+        params.setMargins(0, 0, dp(14), 0);
+        card.setLayoutParams(params);
+
+        ImageView image = new ImageView(this);
+        if (imageUri != null) image.setImageURI(imageUri); else image.setImageResource(imageResId);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        card.addView(image, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        View overlay = new View(this);
+        overlay.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{Color.TRANSPARENT, Color.argb(205, 0, 0, 0)}));
+        card.addView(overlay, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setPadding(dp(16), 0, dp(14), dp(16));
+        card.addView(info, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM));
+
+        TextView titleView = createText(TextUtils.isEmpty(title) ? "Souvenir" : title, 19, Color.WHITE, true);
+        titleView.setSingleLine(true);
+        titleView.setEllipsize(TruncateAt.END);
+        titleView.setIncludeFontPadding(false);
+        info.addView(titleView);
+
+        TextView dateLine = createIconLine(R.drawable.ic_settings_calendar, TextUtils.isEmpty(date) ? "Date a definir" : date, Color.WHITE, 14);
+        dateLine.setIncludeFontPadding(false);
+        LinearLayout.LayoutParams dateParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dateParams.setMargins(0, dp(6), 0, dp(8));
+        info.addView(dateLine, dateParams);
+
+        TextView photosChip = createIconLine(R.drawable.ic_settings_photo, photos, Color.WHITE, 14);
+        photosChip.setBackground(createRoundedRect(Color.argb(145, 7, 56, 68), dp(10), 0, 0));
+        photosChip.setIncludeFontPadding(false);
+        photosChip.setPadding(dp(9), dp(6), dp(11), dp(6));
+        info.addView(photosChip);
+        return card;
+    }
+
+    private View createJournalCard(int imageResId, String title, String description, String date) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.HORIZONTAL);
+        card.setGravity(Gravity.CENTER_VERTICAL);
+        card.setPadding(dp(10), dp(10), dp(12), dp(10));
+        card.setBackground(createRoundedRect(Color.WHITE, dp(18), 1, Color.rgb(238, 243, 245)));
+        card.setElevation(dp(3));
+        card.setClickable(true);
+        card.setFocusable(true);
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(126));
+        cardParams.setMargins(0, 0, 0, dp(12));
+        card.setLayoutParams(cardParams);
+
+        FrameLayout imageFrame = new FrameLayout(this);
+        imageFrame.setClipToOutline(true);
+        imageFrame.setOutlineProvider(createRoundOutlineProvider(14));
+        ImageView image = new ImageView(this);
+        image.setImageResource(imageResId);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageFrame.addView(image, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        card.addView(imageFrame, new LinearLayout.LayoutParams(dp(116), dp(104)));
+
+        LinearLayout textBlock = new LinearLayout(this);
+        textBlock.setOrientation(LinearLayout.VERTICAL);
+        textBlock.setPadding(dp(10), 0, 0, 0);
+        TextView titleView = createText(title, 15, Color.rgb(5, 18, 49), true);
+        titleView.setMaxLines(2);
+        titleView.setEllipsize(TruncateAt.END);
+        titleView.setIncludeFontPadding(false);
+        textBlock.addView(titleView);
+        TextView descView = createText(description, 13, Color.rgb(96, 103, 116), false);
+        descView.setMaxLines(2);
+        descView.setEllipsize(TruncateAt.END);
+        descView.setPadding(0, dp(7), 0, dp(7));
+        textBlock.addView(descView);
+        TextView dateLine = createIconLine(R.drawable.ic_settings_calendar, date, Color.rgb(145, 148, 154), 13);
+        dateLine.setIncludeFontPadding(false);
+        textBlock.addView(dateLine);
+        card.addView(textBlock, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+        LinearLayout right = new LinearLayout(this);
+        right.setOrientation(LinearLayout.VERTICAL);
+        right.setGravity(Gravity.CENTER_HORIZONTAL);
+        TextView dots = createText("...", 18, Color.rgb(7, 56, 68), true);
+        dots.setGravity(Gravity.CENTER);
+        ImageView location = new ImageView(this);
+        location.setImageResource(R.drawable.ic_detail_pin);
+        location.setColorFilter(NAV_ACTIVE_COLOR);
+        location.setPadding(dp(6), dp(6), dp(6), dp(6));
+        right.addView(dots, new LinearLayout.LayoutParams(dp(28), 0, 1));
+        right.addView(location, new LinearLayout.LayoutParams(dp(28), 0, 1));
+        card.addView(right, new LinearLayout.LayoutParams(dp(34), ViewGroup.LayoutParams.MATCH_PARENT));
+        return card;
+    }
+
+    private View createFavoriteMemoryCard(int imageResId, String place) {
+        FrameLayout card = new FrameLayout(this);
+        card.setClipToOutline(true);
+        card.setOutlineProvider(createRoundOutlineProvider(16));
+        card.setClickable(true);
+        card.setFocusable(true);
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 0;
+        params.height = dp(100);
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        params.setMargins(dp(5), dp(4), dp(5), dp(4));
+        card.setLayoutParams(params);
+
+        ImageView image = new ImageView(this);
+        image.setImageResource(imageResId);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        card.addView(image, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        TextView label = createIconLine(R.drawable.ic_settings_location, place, Color.rgb(5, 18, 49), 13);
+        label.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
+        label.setBackground(createRoundedRect(Color.WHITE, dp(15), 0, 0));
+        label.setPadding(dp(9), dp(7), dp(9), dp(7));
+        FrameLayout.LayoutParams labelParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(34), Gravity.BOTTOM);
+        labelParams.setMargins(dp(7), 0, dp(7), dp(6));
+        card.addView(label, labelParams);
+        return card;
+    }
+
+    private void addYearSection(LinearLayout parent) {
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        rowParams.setMargins(0, dp(25), 0, dp(25));
+        parent.addView(row, rowParams);
+
+        int[] years = {2025, 2024, 2023, 2022, 2021};
+        for (int i = 0; i < years.length; i++) {
+            TextView chip = createText(String.valueOf(years[i]), 14, i == 0 ? Color.WHITE : NAV_ACTIVE_COLOR, true);
+            chip.setGravity(Gravity.CENTER);
+            chip.setBackground(createRoundedRect(i == 0 ? NAV_ACTIVE_COLOR : Color.WHITE, dp(18), 1, NAV_ACTIVE_COLOR));
+            LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams(dp(66), dp(32));
+            chipParams.setMargins(dp(4), 0, 0, 0);
+            row.addView(chip, chipParams);
+        }
+    }
+
+    private TextView createIconLine(int iconResId, String text, int color, int sizeSp) {
+        TextView view = createText(text, sizeSp, color, false);
+        view.setGravity(Gravity.CENTER_VERTICAL);
+        view.setCompoundDrawablePadding(dp(7));
+        view.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0);
+        return view;
+    }
+
+    private TextView createText(String text, int sizeSp, int color, boolean bold) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(sizeSp);
+        view.setTextColor(color);
+        view.setIncludeFontPadding(true);
+        if (bold) view.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
+        return view;
+    }
+
+    private GradientDrawable createRoundedRect(int color, int radiusPx, int strokeWidthDp, int strokeColor) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(color);
+        drawable.setCornerRadius(radiusPx);
+        if (strokeWidthDp > 0) drawable.setStroke(dp(strokeWidthDp), strokeColor);
+        return drawable;
+    }
+
+    private ViewOutlineProvider createRoundOutlineProvider(int radiusDp) {
+        return new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), dp(radiusDp));
+            }
+        };
     }
 
     private View createMemoryTile(StepMemoryPhoto memory) {
-        String place = TextUtils.isEmpty(memory.getStepName())
-                ? (TextUtils.isEmpty(memory.getTripName()) ? memory.getDestination() : memory.getTripName())
-                : memory.getStepName();
-        return createMemoryTile(Uri.parse(memory.getPhotoUri()), place, memory.getDate());
+        return createMemoryTile(memory, dp(200));
+    }
+
+    private View createMemoryTile(StepMemoryPhoto memory, int heightPx) {
+        String place = TextUtils.isEmpty(memory.getStepName()) ? (TextUtils.isEmpty(memory.getTripName()) ? memory.getDestination() : memory.getTripName()) : memory.getStepName();
+        return createMemoryTile(Uri.parse(memory.getPhotoUri()), place, memory.getDate(), heightPx);
     }
 
     private View createMemoryTile(int imageResId, String place, String date) {
         FrameLayout tile = new FrameLayout(this);
         tile.setClickable(true);
         tile.setFocusable(true);
-
         ImageView image = new ImageView(this);
         image.setImageResource(imageResId);
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         image.setClickable(false);
-        tile.addView(image, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-
-        View shade = new View(this);
-        shade.setBackground(new GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{Color.TRANSPARENT, Color.argb(185, 0, 0, 0)}
-        ));
-        shade.setVisibility(View.GONE);
-        shade.setClickable(false);
-        tile.addView(shade, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-
-        LinearLayout info = new LinearLayout(this);
-        info.setOrientation(LinearLayout.VERTICAL);
-        info.setPadding(dp(16), 0, dp(12), dp(18));
-        info.setVisibility(View.GONE);
-        info.setClickable(false);
-
-        TextView placeText = new TextView(this);
-        placeText.setText(place);
-        placeText.setTextColor(Color.WHITE);
-        placeText.setTextSize(16);
-        placeText.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
-        info.addView(placeText);
-
-        TextView dateText = new TextView(this);
-        dateText.setText(date);
-        dateText.setTextColor(Color.WHITE);
-        dateText.setTextSize(14);
-        dateText.setPadding(0, dp(6), 0, 0);
-        info.addView(dateText);
-
-        FrameLayout.LayoutParams infoParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM
-        );
-        tile.addView(info, infoParams);
-
-        attachMemoryReveal(tile, shade, info);
-        attachMemoryReveal(image, shade, info);
-        attachMemoryReveal(shade, shade, info);
-        attachMemoryReveal(info, shade, info);
-        attachMemoryReveal(placeText, shade, info);
-        attachMemoryReveal(dateText, shade, info);
-        tile.setOnClickListener(view -> showMemoryInfo(shade, info));
-
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 0;
-        params.height = dp(200);
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        params.setMargins(dp(2), dp(2), dp(2), dp(2));
-        tile.setLayoutParams(params);
-        return tile;
+        tile.addView(image, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return finishMemoryTile(tile, place, date, dp(200));
     }
 
     private View createMemoryTile(Uri imageUri, String place, String date) {
+        return createMemoryTile(imageUri, place, date, dp(200));
+    }
+
+    private View createMemoryTile(Uri imageUri, String place, String date, int heightPx) {
         FrameLayout tile = new FrameLayout(this);
         tile.setClickable(true);
         tile.setFocusable(true);
-
         ImageView image = new ImageView(this);
         image.setImageURI(imageUri);
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         image.setClickable(false);
-        tile.addView(image, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
+        tile.addView(image, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return finishMemoryTile(tile, place, date, heightPx);
+    }
 
+    private View finishMemoryTile(FrameLayout tile, String place, String date, int heightPx) {
         View shade = new View(this);
-        shade.setBackground(new GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{Color.TRANSPARENT, Color.argb(185, 0, 0, 0)}
-        ));
+        shade.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{Color.TRANSPARENT, Color.argb(185, 0, 0, 0)}));
         shade.setVisibility(View.GONE);
         shade.setClickable(false);
-        tile.addView(shade, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
+        tile.addView(shade, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         LinearLayout info = new LinearLayout(this);
         info.setOrientation(LinearLayout.VERTICAL);
@@ -724,16 +897,8 @@ public class HomeActivity extends AppCompatActivity {
         dateText.setPadding(0, dp(6), 0, 0);
         info.addView(dateText);
 
-        FrameLayout.LayoutParams infoParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM
-        );
-        tile.addView(info, infoParams);
-
+        tile.addView(info, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM));
         attachMemoryReveal(tile, shade, info);
-        attachMemoryReveal(image, shade, info);
-        attachMemoryReveal(shade, shade, info);
         attachMemoryReveal(info, shade, info);
         attachMemoryReveal(placeText, shade, info);
         attachMemoryReveal(dateText, shade, info);
@@ -741,9 +906,9 @@ public class HomeActivity extends AppCompatActivity {
 
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.width = 0;
-        params.height = dp(200);
+        params.height = heightPx;
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        params.setMargins(dp(2), dp(2), dp(2), dp(2));
+        params.setMargins(dp(4), dp(4), dp(4), dp(4));
         tile.setLayoutParams(params);
         return tile;
     }
@@ -1466,6 +1631,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateUserHeader();
         if (navigationIcons != null
                 && (notificationsContent == null
                 || notificationsContent.getVisibility() != View.VISIBLE)
@@ -1485,7 +1651,7 @@ public class HomeActivity extends AppCompatActivity {
         if (tripAdapter != null && tripDao != null) {
             List<Trip> trips = tripDao.getTripsForHome(getConnectedUserId());
             allTrips.clear();
-            allTrips.addAll(trips.isEmpty() ? createTrips() : trips);
+            allTrips.addAll(trips);
             filterTrips(searchInput == null ? "" : searchInput.getText().toString());
         }
     }
@@ -1493,10 +1659,35 @@ public class HomeActivity extends AppCompatActivity {
     private void updateUserHeader() {
         TextView greetingText = findViewById(R.id.txt_user_greeting);
         TextView initialsText = findViewById(R.id.txt_user_initials);
+        ImageView avatarImage = findViewById(R.id.img_user_avatar);
 
-        String name = getConnectedUserName();
+        String name = profilePreferences == null ? "" : profilePreferences.getFullName();
+        if (TextUtils.isEmpty(name)) {
+            name = getConnectedUserName();
+        }
         greetingText.setText("Bonjour, " + name);
         initialsText.setText(getInitials(name));
+
+        String photoUri = profilePreferences == null ? "" : profilePreferences.getPhotoUri();
+        if (!TextUtils.isEmpty(photoUri)) {
+            try {
+                Glide.with(this)
+                        .load(Uri.parse(photoUri))
+                        .circleCrop()
+                        .into(avatarImage);
+                avatarImage.setVisibility(View.VISIBLE);
+                initialsText.setVisibility(View.GONE);
+            } catch (SecurityException exception) {
+                if (profilePreferences != null) {
+                    profilePreferences.putString("photo_uri", "");
+                }
+                avatarImage.setVisibility(View.GONE);
+                initialsText.setVisibility(View.VISIBLE);
+            }
+        } else {
+            avatarImage.setVisibility(View.GONE);
+            initialsText.setVisibility(View.VISIBLE);
+        }
     }
 
     private String getConnectedUserName() {
@@ -1540,15 +1731,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return initials.length() == 0 ? "T" : initials.toString();
-    }
-
-    private List<Trip> createTrips() {
-        List<Trip> trips = new ArrayList<>();
-        trips.add(new Trip("A VENIR", "Paradis aux Maldives", "15 juin - 22 juin 2024", "5 lieux", R.drawable.travel_beach_bg));
-        trips.add(new Trip(null, "Paris et Bruxelles", "5 aout - 18 aout 2024", "8 lieux", R.drawable.travel_balloons_bg));
-        trips.add(new Trip(null, "Aventure dans les Alpes suisses", "10 septembre - 20 septembre 2024", "4 lieux", R.drawable.travel_beach_bg));
-        trips.add(new Trip("VOYAGES PASSES", "Escapade a Venise", "12 mars - 19 mars 2024", "3 lieux", R.drawable.travel_balloons_bg));
-        return trips;
     }
 
     private void filterTrips(String query) {

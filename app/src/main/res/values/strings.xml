@@ -3,7 +3,7 @@
     <string name="app_name">Travelin</string>
     <string name="splash_slogan">Your Passport to Seamless Adventures!</string>
     <string name="travelin_web_client_id">YOUR_WEB_CLIENT_ID_FROM_FIREBASE</string>
-    <string name="google_maps_key">AIzaSyCS70S0bLckqFjvilex5kWmKKf1o8oPdO8</string>
+    <string name="google_maps_key">AIzaSyDwTRP-msg7iItwbT-N6s4Y7C2B_5TeJO8</string>
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
     <string name="fb_login_protocol_scheme">fbYOUR_FACEBOOK_APP_ID</string>
     <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>

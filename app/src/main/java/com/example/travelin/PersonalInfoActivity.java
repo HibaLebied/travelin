@@ -12,12 +12,14 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -28,6 +30,8 @@ import com.google.firebase.auth.UserInfo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Locale;
@@ -38,6 +42,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
     private ProfilePreferences profilePreferences;
     private ImageView avatarImage;
+    private TextView initialsText;
     private EditText fullNameInput;
     private EditText emailInput;
     private EditText phoneInput;
@@ -53,6 +58,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         profilePreferences = new ProfilePreferences(this);
 
         avatarImage = findViewById(R.id.img_personal_avatar);
+        initialsText = findViewById(R.id.txt_personal_initials);
         fullNameInput = findViewById(R.id.input_full_name);
         emailInput = findViewById(R.id.input_email);
         phoneInput = findViewById(R.id.input_phone);
@@ -75,20 +81,29 @@ public class PersonalInfoActivity extends AppCompatActivity {
         birthDateInput.setText(profilePreferences.getBirthDate());
         photoUri = profilePreferences.getPhotoUri();
         if (!TextUtils.isEmpty(photoUri)) {
-            avatarImage.setImageURI(Uri.parse(photoUri));
+            setAvatarSafely(Uri.parse(photoUri));
+        } else {
+            showInitialsAvatar();
         }
     }
 
+
     private void showPhotoPicker() {
+        boolean hasPhoto = !TextUtils.isEmpty(photoUri);
+        CharSequence[] items = hasPhoto
+                ? new CharSequence[]{"Galerie", "Camera", "Supprimer la photo"}
+                : new CharSequence[]{"Galerie", "Camera"};
         new AlertDialog.Builder(this)
                 .setTitle("Photo de profil")
-                .setItems(new CharSequence[]{"Galerie", "Caméra"}, (dialog, which) -> {
+                .setItems(items, (dialog, which) -> {
                     if (which == 0) {
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, REQUEST_GALLERY);
-                    } else {
+                    } else if (which == 1) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(intent, REQUEST_CAMERA);
+                    } else {
+                        removeProfilePhoto();
                     }
                 })
                 .show();
@@ -291,8 +306,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
             return;
         }
         if (requestCode == REQUEST_GALLERY && data.getData() != null) {
-            photoUri = data.getData().toString();
-            avatarImage.setImageURI(data.getData());
+            saveGalleryImage(data.getData());
         } else if (requestCode == REQUEST_CAMERA && data.getExtras() != null) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             if (bitmap != null) {
@@ -306,9 +320,75 @@ public class PersonalInfoActivity extends AppCompatActivity {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
             photoUri = Uri.fromFile(file).toString();
-            avatarImage.setImageURI(Uri.parse(photoUri));
+            setAvatarSafely(Uri.parse(photoUri));
         } catch (IOException exception) {
             Toast.makeText(this, "Impossible d'enregistrer la photo", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveGalleryImage(Uri sourceUri) {
+        File file = new File(getFilesDir(), "profile_photo_gallery.jpg");
+        try (InputStream inputStream = getContentResolver().openInputStream(sourceUri);
+             OutputStream outputStream = new FileOutputStream(file)) {
+            if (inputStream == null) {
+                Toast.makeText(this, "Impossible de lire la photo", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+            photoUri = Uri.fromFile(file).toString();
+            setAvatarSafely(Uri.parse(photoUri));
+        } catch (IOException | SecurityException exception) {
+            Toast.makeText(this, "Impossible d'enregistrer la photo", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setAvatarSafely(Uri uri) {
+        try {
+            avatarImage.setPadding(0, 0, 0, 0);
+            Glide.with(this)
+                    .load(uri)
+                    .circleCrop()
+                    .into(avatarImage);
+            avatarImage.setVisibility(ImageView.VISIBLE);
+            initialsText.setVisibility(TextView.GONE);
+        } catch (SecurityException exception) {
+            photoUri = "";
+            showInitialsAvatar();
+            Toast.makeText(this, "Photo inaccessible, choisissez-la à nouveau", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void showInitialsAvatar() {
+        avatarImage.setPadding(28, 28, 28, 28);
+        avatarImage.setVisibility(ImageView.GONE);
+        initialsText.setText(getInitials(fullNameInput.getText().toString()));
+        initialsText.setVisibility(TextView.VISIBLE);
+    }
+
+    private void removeProfilePhoto() {
+        photoUri = "";
+        profilePreferences.putString("photo_uri", "");
+        showInitialsAvatar();
+    }
+
+    private String getInitials(String name) {
+        if (TextUtils.isEmpty(name)) {
+            String email = emailInput == null ? "" : emailInput.getText().toString();
+            if (!TextUtils.isEmpty(email) && email.contains("@")) {
+                name = email.substring(0, email.indexOf('@'));
+            }
+        }
+        if (TextUtils.isEmpty(name)) {
+            return "?";
+        }
+        String[] parts = name.trim().split("\\s+");
+        if (parts.length == 1) {
+            return parts[0].substring(0, 1).toUpperCase(Locale.ROOT);
+        }
+        return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1))
+                .toUpperCase(Locale.ROOT);
     }
 }
