@@ -61,18 +61,22 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/input_location_name"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/add_step_field_background"
+                android:completionThreshold="3"
                 android:drawableLeft="@drawable/ic_detail_pin"
                 android:drawablePadding="12dp"
+                android:dropDownHeight="wrap_content"
                 android:hint="Ex. : Tour Eiffel"
+                android:imeOptions="actionDone"
                 android:inputType="textCapWords"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
+                android:singleLine="true"
                 android:textColor="#071D2B"
                 android:textColorHint="#8A96A3"
                 android:textSize="16sp" />
@@ -194,7 +198,13 @@
                 android:clickable="true"
                 android:focusable="true">
 
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
                 <LinearLayout
+                    android:id="@+id/map_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

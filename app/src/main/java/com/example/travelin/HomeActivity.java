@@ -425,17 +425,16 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showMemoriesContent() {
         hideSecondaryContent();
-        if (memoriesContent == null) {
-            memoriesContent = createMemoriesView();
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            );
-            params.bottomMargin = dp(76);
-            rootContainer.addView(memoriesContent, params);
-        } else {
-            memoriesContent.setVisibility(View.VISIBLE);
+        if (memoriesContent != null) {
+            rootContainer.removeView(memoriesContent);
         }
+        memoriesContent = createMemoriesView();
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        params.bottomMargin = dp(76);
+        rootContainer.addView(memoriesContent, params);
 
         addTripButton.setVisibility(View.GONE);
         navigationBar.bringToFront();
@@ -505,7 +504,6 @@ public class HomeActivity extends AppCompatActivity {
         ));
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("9 photos from your travels");
         subtitle.setTextColor(Color.rgb(87, 99, 120));
         subtitle.setTextSize(16);
         subtitle.setPadding(dp(26), dp(6), dp(26), dp(22));
@@ -522,59 +520,32 @@ public class HomeActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
-        int[] images = {
-                R.drawable.travel_beach_bg,
-                R.drawable.travel_balloons_bg,
-                R.drawable.add_trip_mountain_cover,
-                R.drawable.travel_beach_bg,
-                R.drawable.travel_balloons_bg,
-                R.drawable.add_trip_mountain_cover,
-                R.drawable.travel_balloons_bg,
-                R.drawable.travel_beach_bg,
-                R.drawable.add_trip_mountain_cover,
-                R.drawable.travel_beach_bg,
-                R.drawable.travel_balloons_bg,
-                R.drawable.add_trip_mountain_cover,
-                R.drawable.travel_beach_bg
-        };
-        String[] places = {
-                "Maldives Beach",
-                "Grand Place",
-                "Swiss Alps",
-                "Tropical Paradise",
-                "Bruges Canal",
-                "Mountain Valley",
-                "Tokyo Tower",
-                "Island Lagoon",
-                "Alpine Trail",
-                "Blue Coast",
-                "Old City Walk",
-                "Green Hills",
-                "Sunny Bay"
-        };
-        String[] dates = {
-                "Jun 15, 2024",
-                "Jun 15, 2024",
-                "Jun 16, 2024",
-                "Jun 16, 2024",
-                "Jun 17, 2024",
-                "Jun 18, 2024",
-                "Jun 20, 2024",
-                "Jun 21, 2024",
-                "Jun 22, 2024",
-                "Jun 23, 2024",
-                "Jun 24, 2024",
-                "Jun 25, 2024",
-                "Jun 26, 2024"
-        };
+        List<StepMemoryPhoto> memories = tripDao.getStepMemoryPhotos(getConnectedUserId());
+        subtitle.setText(memories.size() == 1
+                ? "1 photo souvenir"
+                : memories.size() + " photos souvenirs");
 
-        int initialPhotoCount = 9;
+        if (memories.isEmpty()) {
+            TextView emptyText = new TextView(this);
+            emptyText.setText("Aucune photo souvenir pour le moment");
+            emptyText.setTextColor(Color.rgb(87, 99, 120));
+            emptyText.setTextSize(16);
+            emptyText.setGravity(Gravity.CENTER);
+            emptyText.setPadding(dp(20), dp(50), dp(20), dp(50));
+            content.addView(emptyText, new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            ));
+            return screen;
+        }
+
+        int initialPhotoCount = Math.min(9, memories.size());
         for (int index = 0; index < initialPhotoCount; index++) {
-            grid.addView(createMemoryTile(images[index], places[index], dates[index]));
+            grid.addView(createMemoryTile(memories.get(index)));
         }
 
         TextView loadMoreButton = new TextView(this);
-        loadMoreButton.setText("Load More Photos");
+        loadMoreButton.setText("Charger plus de photos");
         loadMoreButton.setTextColor(Color.WHITE);
         loadMoreButton.setTextSize(16);
         loadMoreButton.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
@@ -590,19 +561,27 @@ public class HomeActivity extends AppCompatActivity {
         loadMoreParams.gravity = Gravity.CENTER_HORIZONTAL;
         loadMoreParams.setMargins(0, dp(38), 0, dp(30));
         content.addView(loadMoreButton, loadMoreParams);
+        loadMoreButton.setVisibility(initialPhotoCount >= memories.size() ? View.GONE : View.VISIBLE);
         loadMoreButton.setOnClickListener(view -> {
             int currentCount = grid.getChildCount();
-            int nextCount = Math.min(images.length, currentCount + 4);
+            int nextCount = Math.min(memories.size(), currentCount + 4);
             for (int index = currentCount; index < nextCount; index++) {
-                grid.addView(createMemoryTile(images[index], places[index], dates[index]));
+                grid.addView(createMemoryTile(memories.get(index)));
             }
-            subtitle.setText(nextCount + " photos from your travels");
-            if (nextCount >= images.length) {
+            subtitle.setText(nextCount == 1 ? "1 photo souvenir" : nextCount + " photos souvenirs");
+            if (nextCount >= memories.size()) {
                 loadMoreButton.setVisibility(View.GONE);
             }
         });
 
         return screen;
+    }
+
+    private View createMemoryTile(StepMemoryPhoto memory) {
+        String place = TextUtils.isEmpty(memory.getStepName())
+                ? (TextUtils.isEmpty(memory.getTripName()) ? memory.getDestination() : memory.getTripName())
+                : memory.getStepName();
+        return createMemoryTile(Uri.parse(memory.getPhotoUri()), place, memory.getDate());
     }
 
     private View createMemoryTile(int imageResId, String place, String date) {
@@ -646,6 +625,76 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView dateText = new TextView(this);
         dateText.setText(date);
+        dateText.setTextColor(Color.WHITE);
+        dateText.setTextSize(14);
+        dateText.setPadding(0, dp(6), 0, 0);
+        info.addView(dateText);
+
+        FrameLayout.LayoutParams infoParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM
+        );
+        tile.addView(info, infoParams);
+
+        attachMemoryReveal(tile, shade, info);
+        attachMemoryReveal(image, shade, info);
+        attachMemoryReveal(shade, shade, info);
+        attachMemoryReveal(info, shade, info);
+        attachMemoryReveal(placeText, shade, info);
+        attachMemoryReveal(dateText, shade, info);
+        tile.setOnClickListener(view -> showMemoryInfo(shade, info));
+
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 0;
+        params.height = dp(200);
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        params.setMargins(dp(2), dp(2), dp(2), dp(2));
+        tile.setLayoutParams(params);
+        return tile;
+    }
+
+    private View createMemoryTile(Uri imageUri, String place, String date) {
+        FrameLayout tile = new FrameLayout(this);
+        tile.setClickable(true);
+        tile.setFocusable(true);
+
+        ImageView image = new ImageView(this);
+        image.setImageURI(imageUri);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        image.setClickable(false);
+        tile.addView(image, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+
+        View shade = new View(this);
+        shade.setBackground(new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{Color.TRANSPARENT, Color.argb(185, 0, 0, 0)}
+        ));
+        shade.setVisibility(View.GONE);
+        shade.setClickable(false);
+        tile.addView(shade, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setPadding(dp(16), 0, dp(12), dp(18));
+        info.setVisibility(View.GONE);
+        info.setClickable(false);
+
+        TextView placeText = new TextView(this);
+        placeText.setText(TextUtils.isEmpty(place) ? "Souvenir" : place);
+        placeText.setTextColor(Color.WHITE);
+        placeText.setTextSize(16);
+        placeText.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
+        info.addView(placeText);
+
+        TextView dateText = new TextView(this);
+        dateText.setText(TextUtils.isEmpty(date) ? "Date a definir" : date);
         dateText.setTextColor(Color.WHITE);
         dateText.setTextSize(14);
         dateText.setPadding(0, dp(6), 0, 0);

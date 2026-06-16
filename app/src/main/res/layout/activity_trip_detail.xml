@@ -120,6 +120,7 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/detail_content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -129,40 +130,28 @@
             android:paddingBottom="30dp">
 
             <FrameLayout
+                android:id="@+id/detail_map_card"
                 android:layout_width="match_parent"
                 android:layout_height="214dp"
                 android:background="@drawable/detail_map_background"
-                android:elevation="3dp"
-                android:padding="22dp">
+                android:elevation="3dp">
 
-                <LinearLayout
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/detail_map_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/txt_no_map_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/detail_map_background"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="58dp"
-                        android:layout_height="58dp"
-                        android:src="@drawable/ic_detail_pin" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Interactive Map View"
-                        android:textColor="#29435C"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Appuyez pour voir tous les lieux"
-                        android:textColor="#8CA0A8"
-                        android:textSize="15sp" />
-                </LinearLayout>
+                    android:padding="22dp"
+                    android:text="Aucune étape ajoutée"
+                    android:textColor="#29435C"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
             </FrameLayout>
 
             <TextView

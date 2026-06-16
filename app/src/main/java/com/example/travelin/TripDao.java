@@ -41,7 +41,8 @@ public class TripDao {
         return db.insert(DatabaseHelper.TABLE_TRIPS, null, values);
     }
 
-    public long insertStep(long tripId, String locationName, String description, String date, String time) {
+    public long insertStep(long tripId, String locationName, String description, String date, String time,
+                           Double latitude, Double longitude) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("trip_id", tripId);
@@ -49,10 +50,44 @@ public class TripDao {
         values.put("description", description);
         values.put("date", date);
         values.put("time", time);
-        values.putNull("latitude");
-        values.putNull("longitude");
+        if (latitude == null) {
+            values.putNull("latitude");
+        } else {
+            values.put("latitude", latitude);
+        }
+        if (longitude == null) {
+            values.putNull("longitude");
+        } else {
+            values.put("longitude", longitude);
+        }
         values.put("created_at", System.currentTimeMillis());
         return db.insert(DatabaseHelper.TABLE_STEPS, null, values);
+    }
+
+    public int updateStep(long stepId, String locationName, String description, String date, String time,
+                          Double latitude, Double longitude) {
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("location_name", locationName);
+        values.put("description", description);
+        values.put("date", date);
+        values.put("time", time);
+        if (latitude == null) {
+            values.putNull("latitude");
+        } else {
+            values.put("latitude", latitude);
+        }
+        if (longitude == null) {
+            values.putNull("longitude");
+        } else {
+            values.put("longitude", longitude);
+        }
+        return db.update(
+                DatabaseHelper.TABLE_STEPS,
+                values,
+                "id=?",
+                new String[]{String.valueOf(stepId)}
+        );
     }
 
     public long insertStepPhoto(long stepId, String photoUri) {
@@ -64,12 +99,38 @@ public class TripDao {
         return db.insert(DatabaseHelper.TABLE_STEP_PHOTOS, null, values);
     }
 
+    public List<StepMemoryPhoto> getStepMemoryPhotos(String userId) {
+        List<StepMemoryPhoto> photos = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        String query = "SELECT p.photo_uri, s.location_name, s.date, t.trip_name, t.destination "
+                + "FROM " + DatabaseHelper.TABLE_STEP_PHOTOS + " p "
+                + "INNER JOIN " + DatabaseHelper.TABLE_STEPS + " s ON p.step_id = s.id "
+                + "INNER JOIN " + DatabaseHelper.TABLE_TRIPS + " t ON s.trip_id = t." + DatabaseHelper.COL_ID + " "
+                + "WHERE t." + DatabaseHelper.COL_USER_ID + "=? "
+                + "ORDER BY p.created_at DESC";
+        Cursor cursor = db.rawQuery(query, new String[]{userId});
+        try {
+            while (cursor.moveToNext()) {
+                photos.add(new StepMemoryPhoto(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4)
+                ));
+            }
+        } finally {
+            cursor.close();
+        }
+        return photos;
+    }
+
     public List<TripStep> getStepsForTrip(long tripId) {
         List<TripStep> steps = new ArrayList<>();
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.query(
                 DatabaseHelper.TABLE_STEPS,
-                new String[]{"id", "location_name", "description", "date", "time"},
+                new String[]{"id", "location_name", "description", "date", "time", "latitude", "longitude"},
                 "trip_id=?",
                 new String[]{String.valueOf(tripId)},
                 null,
@@ -83,7 +144,9 @@ public class TripDao {
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
-                        cursor.getString(4)
+                        cursor.getString(4),
+                        cursor.isNull(5) ? null : cursor.getDouble(5),
+                        cursor.isNull(6) ? null : cursor.getDouble(6)
                 ));
             }
         } finally {
