@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_sign_up"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        android:src="@drawable/travel_balloons_bg" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_overlay" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="760dp"
+            android:orientation="vertical"
+            android:padding="@dimen/screen_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_card"
+                android:orientation="vertical"
+                android:paddingLeft="24dp"
+                android:paddingTop="30dp"
+                android:paddingRight="24dp"
+                android:paddingBottom="34dp">
+
+                <TextView
+                    android:id="@+id/txt_sign_up_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Creer votre compte Travelin"
+                    android:textColor="@color/text_dark"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_sign_up_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Commencez votre voyage avec nous"
+                    android:textColor="@color/text_muted"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edt_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="26dp"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="Nom complet"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/edt_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="E-mail ou numero de telephone"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/edt_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="Mot de passe"
+                    android:inputType="textPassword"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/edt_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="Confirmer le mot de passe"
+                    android:inputType="textPassword"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btn_sign_up"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/rounded_button"
+                    android:stateListAnimator="@null"
+                    android:text="Creer un compte"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_social_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="18dp"
+                    android:text="ou s'inscrire avec"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btn_google"
+                        android:layout_width="74dp"
+                        android:layout_height="54dp"
+                        android:background="@drawable/social_button_background"
+                        android:contentDescription="Google"
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/gmail_logo" />
+
+                    <ImageButton
+                        android:id="@+id/btn_facebook"
+                        android:layout_width="74dp"
+                        android:layout_height="54dp"
+                        android:layout_marginStart="22dp"
+                        android:background="@drawable/social_button_background"
+                        android:contentDescription="Facebook"
+                        android:padding="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/facebook_logo" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_have_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Vous avez deja un compte ?"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btn_go_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_outline_button"
+                android:stateListAnimator="@null"
+                android:text="Se connecter"
+                android:textAllCaps="false"
+                android:textColor="@color/primary"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/txt_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8dp"
+        android:text="Francais v"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</FrameLayout>

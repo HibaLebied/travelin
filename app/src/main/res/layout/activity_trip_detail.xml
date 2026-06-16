@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F6F8"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="282dp">
+
+        <ImageView
+            android:id="@+id/img_detail_hero"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Photo du voyage"
+            android:scaleType="centerCrop"
+            android:src="@drawable/travel_beach_bg" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/detail_top_overlay" />
+
+        <ImageButton
+            android:id="@+id/btn_detail_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Retour"
+            android:padding="12dp"
+            android:src="@drawable/ic_add_trip_back"
+            app:tint="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="28dp"
+            android:paddingBottom="26dp">
+
+            <TextView
+                android:id="@+id/txt_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Maldives Paradise"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_detail_dates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Jun 15 - Jun 22, 2024"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="@color/white"
+        android:elevation="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="30dp"
+        android:paddingRight="28dp">
+
+        <TextView
+            android:id="@+id/btn_add_step"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:layout_weight="1"
+            android:background="@drawable/detail_primary_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="+  Ajouter une etape"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btn_share_trip"
+            android:layout_width="58dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/detail_circle_button"
+            android:contentDescription="Partager le voyage"
+            android:padding="15dp"
+            android:src="@drawable/ic_detail_share" />
+
+        <ImageButton
+            android:id="@+id/btn_alert_trip"
+            android:layout_width="58dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="12dp"
+            android:background="@drawable/detail_circle_button"
+            android:contentDescription="Alertes du voyage"
+            android:padding="15dp"
+            android:src="@drawable/ic_detail_bell" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:paddingBottom="28dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingTop="26dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="30dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="214dp"
+                android:background="@drawable/detail_map_background"
+                android:elevation="3dp"
+                android:padding="22dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:src="@drawable/ic_detail_pin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Interactive Map View"
+                        android:textColor="#29435C"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Appuyez pour voir tous les lieux"
+                        android:textColor="#8CA0A8"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Planning du voyage"
+                android:textColor="#071D2B"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/detail_card_background"
+                android:elevation="3dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <FrameLayout
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/detail_icon_bubble">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_detail_pin" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Male International Airport"
+                        android:textColor="#071D2B"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:drawableLeft="@drawable/ic_detail_clock"
+                        android:drawablePadding="7dp"
+                        android:text="Jun 15, 10:00 AM"
+                        android:textColor="#6B7C93"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Arrival at airport, pickup arranged"
+                        android:textColor="#29435C"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/detail_card_background"
+                android:elevation="3dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <FrameLayout
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/detail_icon_bubble">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_detail_phone" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Conrad Maldives Rangali"
+                        android:textColor="#071D2B"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:drawableLeft="@drawable/ic_detail_clock"
+                        android:drawablePadding="7dp"
+                        android:text="Jun 15, 2:00 PM"
+                        android:textColor="#6B7C93"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Check-in to overwater villa"
+                        android:textColor="#29435C"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/detail_card_background"
+                android:elevation="3dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <FrameLayout
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/detail_icon_bubble">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_detail_camera" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Underwater Restaurant"
+                        android:textColor="#071D2B"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:drawableLeft="@drawable/ic_detail_clock"
+                        android:drawablePadding="7dp"
+                        android:text="Jun 16, 7:00 PM"
+                        android:textColor="#6B7C93"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Dinner at Ithaa Undersea Restaurant"
+                        android:textColor="#29435C"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/detail_card_background"
+                android:elevation="3dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <FrameLayout
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/detail_icon_bubble">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_detail_camera" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Coral Reef Diving"
+                        android:textColor="#071D2B"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:drawableLeft="@drawable/ic_detail_clock"
+                        android:drawablePadding="7dp"
+                        android:text="Jun 18, 9:00 AM"
+                        android:textColor="#6B7C93"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Scuba diving experience"
+                        android:textColor="#29435C"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Quick Actions"
+                android:textColor="#071D2B"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/card_call_hotel"
+                    android:layout_width="0dp"
+                    android:layout_height="92dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/detail_card_background"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp">
+
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/detail_action_phone_bubble">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_detail_phone" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Call\nHotel"
+                        android:textColor="#071D2B"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/card_share_sms"
+                    android:layout_width="0dp"
+                    android:layout_height="92dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/detail_card_background"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp">
+
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/detail_action_share_bubble">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_detail_share" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Share via\nSMS"
+                        android:textColor="#071D2B"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

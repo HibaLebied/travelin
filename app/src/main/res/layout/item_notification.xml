@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/txt_notification_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="#073844"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/notification_card_background"
+        android:gravity="center_vertical"
+        android:minHeight="104dp"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingTop="14dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="14dp">
+
+        <FrameLayout
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/notification_icon_background">
+
+            <ImageView
+                android:id="@+id/img_notification_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:contentDescription="Icône notification"
+                app:tint="@color/white" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_notification_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#071436"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_notification_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:lineSpacingExtra="2dp"
+                android:textColor="#355173"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_notification_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textColor="#52668A"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/notification_unread_dot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="26dp"
+                android:background="@drawable/notification_unread_dot" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

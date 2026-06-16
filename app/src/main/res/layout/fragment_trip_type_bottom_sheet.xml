@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/trip_type_bottom_sheet_background"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="12dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="18dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="5dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/trip_type_handle_background" />
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="end|top"
+            android:background="@drawable/trip_type_close_background"
+            android:contentDescription="Fermer"
+            android:padding="11dp"
+            android:src="@drawable/ic_trip_close"
+            app:tint="#5F6B76" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingExtra="2dp"
+        android:text="Quel type de voyage&#10;voudriez-vous ajouter ?"
+        android:textColor="#073844"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:lineSpacingExtra="2dp"
+        android:text="Ne vous inqui&#233;tez pas, vous pouvez changer cela&#10;plus tard."
+        android:textColor="#66717F"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/option_future"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/trip_type_option_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="18dp"
+        android:paddingRight="16dp">
+
+        <RadioButton
+            android:id="@+id/radio_future"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:buttonTint="@color/primary"
+            android:clickable="false" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_trip_calendar_image" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:text="Je veux planifier un voyage futur"
+            android:textColor="#073844"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_current"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/trip_type_option_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="18dp"
+        android:paddingRight="16dp">
+
+        <RadioButton
+            android:id="@+id/radio_current"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:buttonTint="@color/primary"
+            android:clickable="false" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_trip_current_image" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:text="Je voyage"
+            android:textColor="#073844"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_past"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/trip_type_option_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="18dp"
+        android:paddingRight="16dp">
+
+        <RadioButton
+            android:id="@+id/radio_past"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:buttonTint="@color/primary"
+            android:clickable="false" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_trip_past_image" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:text="Je veux ajouter un voyage pass&#233;"
+            android:textColor="#073844"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_continue"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:enabled="false"
+        android:text="Continuer"
+        android:textAllCaps="false"
+        android:textColor="#9FAEBD"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:backgroundTint="#D9E0E7"
+        app:cornerRadius="24dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cancel"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:text="Annuler"
+        android:textAllCaps="false"
+        android:textColor="#073844"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="24dp"
+        app:strokeColor="#D9E0E7"
+        app:strokeWidth="2dp" />
+</LinearLayout>

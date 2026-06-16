@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#007A8C</color>
+    <color name="primary_dark">#006B7A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_dark">#173D42</color>
+    <color name="text_muted">#668083</color>
+    <color name="input_border">#7DA7AD</color>
+    <color name="overlay_soft">#33000000</color>
+</resources>

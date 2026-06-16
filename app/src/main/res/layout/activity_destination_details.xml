@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/destination_screen_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="14dp"
+        android:paddingTop="14dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="28dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageButton
+                android:id="@+id/btn_destination_back"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="start|center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Retour"
+                android:padding="9dp"
+                android:src="@drawable/ic_add_trip_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Destination"
+                android:textColor="#073844"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="266dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/destination_hero_background"
+            android:clipToOutline="true"
+            android:elevation="4dp">
+
+            <ImageView
+                android:id="@+id/img_destination_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="Photo destination"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/img_destination_flag"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="14dp"
+                android:background="@drawable/placeholder_flag"
+                android:contentDescription="Drapeau"
+                android:scaleType="centerCrop" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-18dp"
+            android:background="@drawable/destination_info_card_background"
+            android:elevation="5dp"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingTop="18dp"
+            android:paddingRight="18dp"
+            android:paddingBottom="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_destination_detail_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#073844"
+                        android:textSize="31sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_destination_detail_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="#6F7788"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_destination_detail_places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/destination_chip_background"
+                    android:paddingLeft="13dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="13dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="#007E88"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="18dp"
+                android:background="#E4EEF0" />
+
+            <TextView
+                android:id="@+id/txt_destination_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="#355173"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_destination_theme"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/destination_chip_background"
+                    android:gravity="center"
+                    android:padding="11dp"
+                    android:textColor="#073844"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_destination_continent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/destination_chip_background"
+                    android:gravity="center"
+                    android:padding="11dp"
+                    android:textColor="#073844"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_plan_destination"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_marginTop="20dp"
+            android:elevation="5dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Planifier ce voyage"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/primary"
+            app:cornerRadius="18dp"
+            app:icon="@android:drawable/ic_menu_send"
+            app:iconGravity="textStart"
+            app:iconPadding="16dp"
+            app:iconTint="@color/white" />
+    </LinearLayout>
+</ScrollView>

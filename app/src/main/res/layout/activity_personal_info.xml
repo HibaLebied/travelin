@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="false"
+    android:paddingLeft="20dp"
+    android:paddingTop="0dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="20dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_profile_header" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/settings_card_background"
+            android:elevation="3dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="22dp">
+
+            <FrameLayout
+                android:layout_width="126dp"
+                android:layout_height="126dp">
+
+                <ImageView
+                    android:id="@+id/img_personal_avatar"
+                    android:layout_width="118dp"
+                    android:layout_height="118dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/settings_avatar_background"
+                    android:padding="28dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_settings_profile"
+                    app:tint="@color/primary" />
+
+                <ImageButton
+                    android:id="@+id/btn_change_photo"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/settings_fab_small_background"
+                    android:padding="11dp"
+                    android:src="@drawable/ic_settings_edit"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/input_full_name"
+                style="@style/ProfileEditField"
+                android:drawableStart="@drawable/ic_settings_profile"
+                android:hint="Nom complet" />
+
+            <EditText
+                android:id="@+id/input_email"
+                style="@style/ProfileEditField"
+                android:drawableStart="@drawable/ic_settings_email"
+                android:hint="Adresse e-mail"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/input_phone"
+                style="@style/ProfileEditField"
+                android:drawableStart="@drawable/ic_settings_phone"
+                android:hint="Téléphone"
+                android:inputType="phone" />
+
+            <EditText
+                android:id="@+id/input_city"
+                style="@style/ProfileEditField"
+                android:drawableStart="@drawable/ic_settings_location"
+                android:hint="Ville" />
+
+            <EditText
+                android:id="@+id/input_birth_date"
+                style="@style/ProfileEditField"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_settings_calendar"
+                android:focusable="false"
+                android:hint="Date de naissance" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_profile"
+                style="@style/ProfilePrimaryButton"
+                android:text="Enregistrer" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

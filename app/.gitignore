@@ -1,0 +1,11 @@
+# Fichiers générés par Android Studio
+.idea/
+.gradle/
+build/
+
+# Fichiers locaux
+local.properties
+
+# Fichiers de configuration utilisateur
+*.iml
+.DS_Store

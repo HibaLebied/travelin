@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F8F8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="76dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="174dp"
+            android:background="@drawable/home_header_background"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingTop="30dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="16dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_user_greeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bonjour, Paul"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_user_initials"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/avatar_background"
+                    android:gravity="center"
+                    android:text="P"
+                    android:textColor="@color/primary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/input_search_trip"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_search_background"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:hint="Rechercher une destination"
+                android:inputType="text"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:singleLine="true"
+                android:textColor="#102A31"
+                android:textColorHint="#7B8894"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingTop="20dp"
+            android:paddingRight="24dp"
+            android:text="Mes voyages"
+            android:textColor="#102A31"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_trips"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingBottom="22dp" />
+
+        <TextView
+            android:id="@+id/txt_no_trips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="24dp"
+            android:text="Aucun voyage trouve"
+            android:textColor="#5A6C73"
+            android:textSize="15sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/home_bottom_nav_background"
+        app:itemIconTint="@color/primary"
+        app:itemTextColor="@color/primary"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/home_bottom_nav_menu" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_trip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="84dp"
+        android:contentDescription="Ajouter un voyage"
+        app:backgroundTint="@color/primary"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/white" />
+</FrameLayout>

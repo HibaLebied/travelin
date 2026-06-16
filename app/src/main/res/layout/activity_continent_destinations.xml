@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageButton
+                android:id="@+id/btn_continent_back"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Retour"
+                android:padding="11dp"
+                android:src="@drawable/ic_add_trip_back" />
+
+            <TextView
+                android:id="@+id/txt_continent_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#073844"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_continent_destinations"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="14dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="18dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_continent"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:id="@+id/layout_continent_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txt_continent_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#073844"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_continent_retry"
+            android:layout_width="150dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button"
+            android:text="Réessayer"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</FrameLayout>

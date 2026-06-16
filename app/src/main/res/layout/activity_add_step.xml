@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F6F8"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@color/white"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <ImageButton
+            android:id="@+id/btn_add_step_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start|center_vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Retour"
+            android:padding="12dp"
+            android:src="@drawable/ic_add_trip_back"
+            app:tint="#073844" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Ajouter une étape"
+            android:textColor="#073844"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:paddingBottom="24dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="32dp"
+            android:paddingTop="28dp"
+            android:paddingRight="32dp"
+            android:paddingBottom="34dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nom du lieu"
+                android:textColor="#071D2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/input_location_name"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/add_step_field_background"
+                android:drawableLeft="@drawable/ic_detail_pin"
+                android:drawablePadding="12dp"
+                android:hint="Ex. : Tour Eiffel"
+                android:inputType="textCapWords"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:textColor="#071D2B"
+                android:textColorHint="#8A96A3"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Description"
+                android:textColor="#071D2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/input_description"
+                android:layout_width="match_parent"
+                android:layout_height="144dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/add_step_field_background"
+                android:gravity="top|start"
+                android:hint="Que prevoyez-vous de faire ici ?"
+                android:inputType="textMultiLine|textCapSentences"
+                android:paddingLeft="18dp"
+                android:paddingTop="18dp"
+                android:paddingRight="18dp"
+                android:paddingBottom="18dp"
+                android:textColor="#071D2B"
+                android:textColorHint="#8A96A3"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Date"
+                        android:textColor="#071D2B"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/input_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/add_step_field_background"
+                        android:drawableLeft="@drawable/ic_detail_calendar"
+                        android:drawableRight="@drawable/ic_detail_calendar"
+                        android:drawablePadding="8dp"
+                        android:hint="jj/mm/aaaa"
+                        android:inputType="date"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="16dp"
+                        android:textColor="#071D2B"
+                        android:textColorHint="#8A96A3"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Heure"
+                        android:textColor="#071D2B"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/input_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/add_step_field_background"
+                        android:drawableLeft="@drawable/ic_detail_clock"
+                        android:drawableRight="@drawable/ic_detail_clock"
+                        android:drawablePadding="8dp"
+                        android:hint="--:--"
+                        android:inputType="time"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="16dp"
+                        android:textColor="#071D2B"
+                        android:textColorHint="#8A96A3"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Lieu sur la carte"
+                android:textColor="#071D2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/map_picker_card"
+                android:layout_width="match_parent"
+                android:layout_height="218dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/detail_map_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="58dp"
+                        android:layout_height="58dp">
+
+                        <ImageView
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_detail_pin" />
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/detail_red_dot" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Appuyez pour choisir le lieu"
+                        android:textColor="#29435C"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Ajouter des photos"
+                android:textColor="#071D2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/photo_upload_card"
+                android:layout_width="match_parent"
+                android:layout_height="144dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/add_step_photo_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:background="@drawable/detail_icon_bubble">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_detail_small_camera" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/txt_upload_photos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Importer des photos"
+                    android:textColor="#29435C"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="JPG, PNG jusqu'a 10 Mo"
+                    android:textColor="#8A96A3"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_save_step"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/add_step_save_button"
+                android:clickable="true"
+                android:elevation="5dp"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_detail_save" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Enregistrer l'etape"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

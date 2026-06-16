@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/field_root"
+    android:layout_width="match_parent"
+    android:layout_height="76dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/add_trip_field_background"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="14dp"
+    android:paddingRight="14dp">
+
+    <ImageView
+        android:id="@+id/img_field_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <LinearLayout
+        android:id="@+id/field_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="14dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_field_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#071436"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_field_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@android:color/transparent"
+            android:includeFontPadding="false"
+            android:inputType="textCapSentences"
+            android:padding="0dp"
+            android:textColor="#071436"
+            android:textColorHint="#52668A"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

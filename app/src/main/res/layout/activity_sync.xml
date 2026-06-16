@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingLeft="20dp"
+    android:paddingTop="0dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="20dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_sync_header" />
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_settings_cloud"
+            app:tint="@color/primary" />
+
+        <LinearLayout
+            style="@style/ProfileSectionCard"
+            android:layout_marginTop="18dp">
+
+            <LinearLayout style="@style/ProfileOptionRow">
+                <ImageView style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_sync" />
+                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="Synchronisation automatique" />
+                <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_auto_sync" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/ProfileOptionRow">
+                <ImageView style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_clock" />
+                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="Dernière synchronisation" />
+                <TextView android:id="@+id/txt_last_sync" style="@style/ProfileOptionValue" android:text="Aujourd'hui à 08:42" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/ProfileOptionRow">
+                <ImageView style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_cloud" />
+                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="Sauvegarde cloud" />
+                <TextView style="@style/ProfileOptionValue" android:text="Activée" android:textColor="@color/primary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ProfileSectionCard"
+            android:layout_marginTop="18dp">
+
+            <include layout="@layout/item_action_row" android:id="@+id/row_export" />
+            <include layout="@layout/item_action_row" android:id="@+id/row_restore" />
+            <include layout="@layout/item_action_row" android:id="@+id/row_cache" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_start_sync"
+            style="@style/ProfilePrimaryButton"
+            android:layout_marginTop="26dp"
+            android:text="Lancer la synchronisation" />
+    </LinearLayout>
+</ScrollView>

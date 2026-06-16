@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fadeScrollbars="false"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="32dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="0dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="68dp">
+
+                <ImageButton
+                    android:id="@+id/btn_settings_back"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Retour"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_add_trip_back"
+                    app:tint="#071827" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="56dp"
+                    android:paddingRight="56dp"
+                    android:text="Profil"
+                    android:textColor="#071827"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/settings_card_background"
+                android:elevation="3dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="22dp">
+
+                <FrameLayout
+                    android:layout_width="104dp"
+                    android:layout_height="104dp">
+
+                    <ImageView
+                        android:id="@+id/img_profile_avatar"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/settings_avatar_background"
+                        android:padding="24dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_settings_profile"
+                        app:tint="@color/primary" />
+
+                    <ImageButton
+                        android:id="@+id/btn_edit_photo"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/settings_fab_small_background"
+                        android:contentDescription="Modifier la photo"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_settings_edit"
+                        app:tint="@color/white" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_profile_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sarah Benali"
+                        android:textColor="#071827"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_profile_email"
+                        style="@style/ProfileInlineInfo"
+                        android:drawableStart="@drawable/ic_settings_email"
+                        android:text="sarah.benali@email.com" />
+
+                    <TextView
+                        android:id="@+id/txt_profile_city"
+                        style="@style/ProfileInlineInfo"
+                        android:drawableStart="@drawable/ic_settings_location"
+                        android:text="Casablanca, Maroc" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/settings_card_background"
+                android:elevation="3dp"
+                android:orientation="horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <include
+                    layout="@layout/item_profile_stat"
+                    android:id="@+id/stat_trips" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#E6EEF0" />
+
+                <include
+                    layout="@layout/item_profile_stat"
+                    android:id="@+id/stat_steps" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#E6EEF0" />
+
+                <include
+                    layout="@layout/item_profile_stat"
+                    android:id="@+id/stat_photos" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#E6EEF0" />
+
+                <include
+                    layout="@layout/item_profile_stat"
+                    android:id="@+id/stat_days" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/settings_card_background"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+
+                <include
+                    layout="@layout/item_profile_menu_row"
+                    android:id="@+id/row_profile" />
+                <include
+                    layout="@layout/item_profile_menu_row"
+                    android:id="@+id/row_preferences" />
+                <include
+                    layout="@layout/item_profile_menu_row"
+                    android:id="@+id/row_sync" />
+                <include
+                    layout="@layout/item_profile_menu_row"
+                    android:id="@+id/row_help" />
+                <include
+                    layout="@layout/item_profile_menu_row"
+                    android:id="@+id/row_privacy" />
+                <include
+                    layout="@layout/item_profile_menu_row"
+                    android:id="@+id/row_logout" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
