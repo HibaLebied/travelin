@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Travelin</string>
-    <string name="splash_slogan">Your Passport to Seamless Adventures!</string>
-    <string name="travelin_web_client_id">YOUR_WEB_CLIENT_ID_FROM_FIREBASE</string>
-    <string name="google_maps_key">AIzaSyDwTRP-msg7iItwbT-N6s4Y7C2B_5TeJO8</string>
-    <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
-    <string name="fb_login_protocol_scheme">fbYOUR_FACEBOOK_APP_ID</string>
-    <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
+    <string name="app_name" translatable="false">Travelin</string>
+    <string name="splash_slogan" translatable="false">Your Passport to Seamless Adventures!</string>
+    <string name="travelin_web_client_id" translatable="false">YOUR_WEB_CLIENT_ID_FROM_FIREBASE</string>
+    <string name="google_maps_key" translatable="false">AIzaSyAN0-c9_0_sKbu3AMl_3jJbe0qWMZZRDA0</string>
+    <string name="facebook_app_id" translatable="false">YOUR_FACEBOOK_APP_ID</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fbYOUR_FACEBOOK_APP_ID</string>
+    <string name="facebook_client_token" translatable="false">YOUR_FACEBOOK_CLIENT_TOKEN</string>
 </resources>

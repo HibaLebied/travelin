@@ -1,5 +1,6 @@
 package com.example.travelin;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
 import java.util.List;
 
 public class TripDetailActivity extends AppCompatActivity {
@@ -94,6 +97,7 @@ public class TripDetailActivity extends AppCompatActivity {
 
         ImageButton backButton = findViewById(R.id.btn_detail_back);
         backButton.setOnClickListener(v -> finish());
+        findViewById(R.id.btn_detail_more).setOnClickListener(v -> showTripOptions(v));
         findViewById(R.id.btn_add_step).setOnClickListener(v -> {
             Intent intent = new Intent(this, AddStepActivity.class);
             intent.putExtra(AddStepActivity.EXTRA_TRIP_ID, tripId);
@@ -104,6 +108,85 @@ public class TripDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Rappel de voyage active", Toast.LENGTH_SHORT).show());
         findViewById(R.id.card_call_hotel).setOnClickListener(v -> callHotel());
         findViewById(R.id.card_share_sms).setOnClickListener(v -> shareTrip());
+    }
+
+    private void showTripOptions(View anchor) {
+        PopupMenu popupMenu = new PopupMenu(this, anchor);
+        popupMenu.getMenu().add("Supprimer ce voyage");
+        popupMenu.setOnMenuItemClickListener(item -> {
+            showDeleteTripConfirmation();
+            return true;
+        });
+        popupMenu.show();
+    }
+
+    private void showDeleteTripConfirmation() {
+        new AlertDialog.Builder(this)
+                .setTitle("Supprimer ce voyage ?")
+                .setMessage("Toutes les etapes, photos et informations de ce voyage seront supprimees.")
+                .setNegativeButton("Annuler", null)
+                .setPositiveButton("Supprimer", (dialog, which) -> deleteTrip())
+                .show();
+    }
+
+    private void deleteTrip() {
+        List<String> photoUris = tripDao.getPhotoUrisForTrip(tripId);
+        List<Long> stepIds = tripDao.getStepIdsForTrip(tripId);
+        TripReminderScheduler.cancelTripNotifications(this, tripId);
+        for (Long stepId : stepIds) {
+            TripReminderScheduler.cancelStepNotifications(this, stepId);
+        }
+
+        boolean deleted = tripDao.deleteTrip(tripId);
+        if (!deleted) {
+            Toast.makeText(this, "Impossible de supprimer ce voyage", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        deleteOwnedPhotos(photoUris);
+        Toast.makeText(this, "Voyage supprime", Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void deleteOwnedPhotos(List<String> photoUris) {
+        for (String photoUri : photoUris) {
+            if (TextUtils.isEmpty(photoUri)) {
+                continue;
+            }
+            Uri uri = Uri.parse(photoUri);
+            releasePersistedReadPermission(uri);
+            if (TextUtils.equals(uri.getAuthority(), getPackageName() + ".fileprovider")) {
+                deleteFileProviderPhoto(uri);
+            }
+        }
+    }
+
+    private void releasePersistedReadPermission(Uri uri) {
+        try {
+            getContentResolver().releasePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } catch (SecurityException ignored) {
+        }
+    }
+
+    private void deleteFileProviderPhoto(Uri uri) {
+        try {
+            int deleted = getContentResolver().delete(uri, null, null);
+            if (deleted > 0) {
+                return;
+            }
+        } catch (Exception ignored) {
+        }
+
+        List<String> segments = uri.getPathSegments();
+        if (segments.isEmpty()) {
+            return;
+        }
+        File photosDir = new File(getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "step_photos");
+        File photoFile = new File(photosDir, segments.get(segments.size() - 1));
+        if (photoFile.exists()) {
+            photoFile.delete();
+        }
     }
 
     private void renderStepMarkers() {

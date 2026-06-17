@@ -36,6 +36,19 @@
             android:src="@drawable/ic_add_trip_back"
             app:tint="@color/white" />
 
+        <ImageButton
+            android:id="@+id/btn_detail_more"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Options du voyage"
+            android:padding="12dp"
+            android:src="@drawable/ic_detail_more_vert"
+            app:tint="@color/white" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

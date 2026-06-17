@@ -32,6 +32,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Arrays;
+import android.util.Patterns;
+import android.util.Log;
 
 public class SignUpActivity extends Activity {
     private static final String PREFS_NAME = "travelin_prefs";
@@ -275,10 +277,21 @@ public class SignUpActivity extends Activity {
         return false;
     }
 
-    private void showAuthError(Exception exception) {
-        String message = exception == null ? "Authentification echouee" : exception.getMessage();
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+//    private void showAuthError(Exception exception) {
+//        String message = exception == null ? "Authentification echouee" : exception.getMessage();
+//        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+//    }
+private void showAuthError(Exception exception) {
+    if (exception != null) {
+        exception.printStackTrace();
+        Log.e("AUTH_ERROR", "Erreur Firebase", exception);
+        Toast.makeText(this, exception.getClass().getSimpleName()
+                        + "\n" + exception.getMessage(),
+                Toast.LENGTH_LONG).show();
+    } else {
+        Toast.makeText(this, "Authentification échouée", Toast.LENGTH_LONG).show();
     }
+}
 
     private void setLoading(boolean isLoading) {
         signUpButton.setEnabled(!isLoading);

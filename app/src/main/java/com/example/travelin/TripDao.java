@@ -156,6 +156,28 @@ public class TripDao {
         return steps;
     }
 
+    public List<Long> getStepIdsForTrip(long tripId) {
+        List<Long> stepIds = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_STEPS,
+                new String[]{"id"},
+                "trip_id=?",
+                new String[]{String.valueOf(tripId)},
+                null,
+                null,
+                null
+        );
+        try {
+            while (cursor.moveToNext()) {
+                stepIds.add(cursor.getLong(0));
+            }
+        } finally {
+            cursor.close();
+        }
+        return stepIds;
+    }
+
     public TripStep getStepById(long stepId) {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.query(
@@ -238,6 +260,126 @@ public class TripDao {
             cursor.close();
         }
         return null;
+    }
+
+    public boolean deleteTrip(long tripId) {
+        if (tripId <= 0) {
+            return false;
+        }
+
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String[] stepIds = getStepIdsForTrip(db, tripId);
+            if (stepIds.length > 0) {
+                String placeholders = makePlaceholders(stepIds.length);
+                db.delete(
+                        DatabaseHelper.TABLE_STEP_PHOTOS,
+                        "step_id IN (" + placeholders + ")",
+                        stepIds
+                );
+                db.delete(
+                        DatabaseHelper.TABLE_NOTIFICATIONS,
+                        "(type IN (?, ?) AND related_id IN (" + placeholders + "))",
+                        combineArgs(
+                                new String[]{
+                                        NotificationHelper.TYPE_STEP_TODAY,
+                                        NotificationHelper.TYPE_ADD_STEP_PHOTOS
+                                },
+                                stepIds
+                        )
+                );
+            }
+
+            db.delete(
+                    DatabaseHelper.TABLE_STEPS,
+                    "trip_id=?",
+                    new String[]{String.valueOf(tripId)}
+            );
+            db.delete(
+                    DatabaseHelper.TABLE_NOTIFICATIONS,
+                    "(type IN (?, ?, ?) AND related_id=?)",
+                    new String[]{
+                            NotificationHelper.TYPE_DEPARTURE_TOMORROW,
+                            NotificationHelper.TYPE_TRIP_TODAY,
+                            NotificationHelper.TYPE_TRIP_FINISHED,
+                            String.valueOf(tripId)
+                    }
+            );
+            int deletedTrips = db.delete(
+                    DatabaseHelper.TABLE_TRIPS,
+                    DatabaseHelper.COL_ID + "=?",
+                    new String[]{String.valueOf(tripId)}
+            );
+            db.setTransactionSuccessful();
+            return deletedTrips > 0;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public List<String> getPhotoUrisForTrip(long tripId) {
+        List<String> photoUris = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT p.photo_uri "
+                        + "FROM " + DatabaseHelper.TABLE_STEP_PHOTOS + " p "
+                        + "INNER JOIN " + DatabaseHelper.TABLE_STEPS + " s ON p.step_id = s.id "
+                        + "WHERE s.trip_id=?",
+                new String[]{String.valueOf(tripId)}
+        );
+        try {
+            while (cursor.moveToNext()) {
+                photoUris.add(cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        Trip trip = getTripById(tripId);
+        if (trip != null && !TextUtils.isEmpty(trip.getCoverPhotoPath())) {
+            photoUris.add(trip.getCoverPhotoPath());
+        }
+        return photoUris;
+    }
+
+    private String[] getStepIdsForTrip(SQLiteDatabase db, long tripId) {
+        List<String> stepIds = new ArrayList<>();
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_STEPS,
+                new String[]{"id"},
+                "trip_id=?",
+                new String[]{String.valueOf(tripId)},
+                null,
+                null,
+                null
+        );
+        try {
+            while (cursor.moveToNext()) {
+                stepIds.add(String.valueOf(cursor.getLong(0)));
+            }
+        } finally {
+            cursor.close();
+        }
+        return stepIds.toArray(new String[0]);
+    }
+
+    private String makePlaceholders(int count) {
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            if (i > 0) {
+                placeholders.append(",");
+            }
+            placeholders.append("?");
+        }
+        return placeholders.toString();
+    }
+
+    private String[] combineArgs(String[] first, String[] second) {
+        String[] combined = new String[first.length + second.length];
+        System.arraycopy(first, 0, combined, 0, first.length);
+        System.arraycopy(second, 0, combined, first.length, second.length);
+        return combined;
     }
 
     private Trip fromCursor(Cursor cursor) {

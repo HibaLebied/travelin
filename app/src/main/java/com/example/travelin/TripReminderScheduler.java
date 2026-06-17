@@ -37,6 +37,23 @@ public final class TripReminderScheduler {
         scheduleStepNotification(context, stepId, stepDate, 19, NotificationHelper.TYPE_ADD_STEP_PHOTOS);
     }
 
+    public static void cancelTripNotifications(Context context, long tripId) {
+        if (tripId <= 0) {
+            return;
+        }
+        cancel(context, NotificationHelper.TYPE_DEPARTURE_TOMORROW, tripId, (int) (tripId * 100 + 19));
+        cancel(context, NotificationHelper.TYPE_TRIP_TODAY, tripId, (int) (tripId * 100 + 8));
+        cancel(context, NotificationHelper.TYPE_TRIP_FINISHED, tripId, (int) (tripId * 100 + 18));
+    }
+
+    public static void cancelStepNotifications(Context context, long stepId) {
+        if (stepId <= 0) {
+            return;
+        }
+        cancel(context, NotificationHelper.TYPE_STEP_TODAY, stepId, (int) (stepId * 100 + 8));
+        cancel(context, NotificationHelper.TYPE_ADD_STEP_PHOTOS, stepId, (int) (stepId * 100 + 19));
+    }
+
     private static void scheduleTripNotification(Context context, long tripId, String dateValue, int dayOffset,
                                                  int hour, String type) {
         Date date = parseTripDate(dateValue);
@@ -87,6 +104,27 @@ public final class TripReminderScheduler {
         if (alarmManager != null) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
         }
+    }
+
+    private static void cancel(Context context, String type, long relatedId, int requestCode) {
+        Intent intent = new Intent(context, TravelNotificationReceiver.class);
+        intent.putExtra(NotificationHelper.EXTRA_TYPE, type);
+        intent.putExtra(NotificationHelper.EXTRA_RELATED_ID, relatedId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
+        );
+        if (pendingIntent == null) {
+            return;
+        }
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+        }
+        pendingIntent.cancel();
     }
 
     private static void fireNow(Context context, String type, long relatedId) {
