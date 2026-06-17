@@ -18,6 +18,12 @@ public class PreferencesActivity extends AppCompatActivity {
     private SwitchMaterial notificationsSwitch;
     private SwitchMaterial remindersSwitch;
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +33,9 @@ public class PreferencesActivity extends AppCompatActivity {
         currencyValue = findViewById(R.id.txt_currency_value);
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
-        findViewById(R.id.row_language).setOnClickListener(v ->
-                choose(ExploreRepository.KEY_LANGUAGE, "Langue", new String[]{"Français", "English", "العربية"}, languageValue));
+        findViewById(R.id.row_language).setOnClickListener(v -> chooseLanguage());
         findViewById(R.id.row_currency).setOnClickListener(v ->
-                choose(ExploreRepository.KEY_CURRENCY, "Devise", new String[]{"MAD (DH)", "EUR (€)", "USD ($)"}, currencyValue));
+                choose(ExploreRepository.KEY_CURRENCY, getString(R.string.currency), new String[]{"MAD (DH)", "EUR (€)", "USD ($)"}, currencyValue));
 
         notificationsSwitch = bindSwitch(
                 findViewById(R.id.row_notifications),
@@ -68,7 +73,7 @@ public class PreferencesActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btn_save_preferences).setOnClickListener(v -> {
-            Toast.makeText(this, "Préférences enregistrées", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.preferences_saved), Toast.LENGTH_SHORT).show();
             finish();
         });
         bindValues();
@@ -85,6 +90,20 @@ public class PreferencesActivity extends AppCompatActivity {
                 .setItems(items, (dialog, which) -> {
                     preferences.putString(key, items[which]);
                     target.setText(items[which]);
+                })
+                .show();
+    }
+
+    private void chooseLanguage() {
+        String[] items = {getString(R.string.french), getString(R.string.english)};
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.language))
+                .setItems(items, (dialog, which) -> {
+                    preferences.putString(
+                            ExploreRepository.KEY_LANGUAGE,
+                            which == 1 ? LocaleHelper.LANG_EN : LocaleHelper.LANG_FR
+                    );
+                    recreate();
                 })
                 .show();
     }

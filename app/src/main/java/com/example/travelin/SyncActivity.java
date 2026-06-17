@@ -22,6 +22,12 @@ public class SyncActivity extends AppCompatActivity {
     private TextView lastSyncText;
     private MaterialButton syncButton;
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

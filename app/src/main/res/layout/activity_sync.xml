@@ -31,20 +31,20 @@
 
             <LinearLayout style="@style/ProfileOptionRow">
                 <ImageView style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_sync" />
-                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="Synchronisation automatique" />
+                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="@string/auto_sync" />
                 <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_auto_sync" android:layout_width="wrap_content" android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout style="@style/ProfileOptionRow">
                 <ImageView style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_clock" />
-                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="Dernière synchronisation" />
-                <TextView android:id="@+id/txt_last_sync" style="@style/ProfileOptionValue" android:text="Aujourd'hui à 08:42" />
+                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="@string/last_sync" />
+                <TextView android:id="@+id/txt_last_sync" style="@style/ProfileOptionValue" android:text="@string/today_at_0842" />
             </LinearLayout>
 
             <LinearLayout style="@style/ProfileOptionRow">
                 <ImageView style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_cloud" />
-                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="Sauvegarde cloud" />
-                <TextView style="@style/ProfileOptionValue" android:text="Activée" android:textColor="@color/primary" />
+                <TextView style="@style/ProfileOptionTitle" android:layout_weight="1" android:text="@string/cloud_backup" />
+                <TextView style="@style/ProfileOptionValue" android:text="@string/enabled" android:textColor="@color/primary" />
             </LinearLayout>
         </LinearLayout>
 
@@ -61,6 +61,6 @@
             android:id="@+id/btn_start_sync"
             style="@style/ProfilePrimaryButton"
             android:layout_marginTop="26dp"
-            android:text="Lancer la synchronisation" />
+            android:text="@string/start_sync" />
     </LinearLayout>
 </ScrollView>

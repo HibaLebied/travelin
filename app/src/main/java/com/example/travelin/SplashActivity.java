@@ -7,6 +7,12 @@ import android.os.Handler;
 import android.os.Looper;
 
 public class SplashActivity extends Activity {
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

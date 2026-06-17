@@ -32,6 +32,12 @@ public class SettingsActivity extends AppCompatActivity {
     private ImageView[] navigationIcons;
     private TextView[] navigationLabels;
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,19 +107,19 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void bindStats() {
         ProfileStatsDao.ProfileStats stats = new ProfileStatsDao(this).getStats(getConnectedUserId());
-        bindStat(findViewById(R.id.stat_trips), R.drawable.ic_settings_trip, String.valueOf(stats.trips), "Voyages");
-        bindStat(findViewById(R.id.stat_steps), R.drawable.ic_settings_location, String.valueOf(stats.steps), "Étapes");
-        bindStat(findViewById(R.id.stat_photos), R.drawable.ic_settings_photo, String.valueOf(stats.photos), "Photos");
-        bindStat(findViewById(R.id.stat_days), R.drawable.ic_settings_calendar, String.valueOf(stats.days), "Jours de voyage");
+        bindStat(findViewById(R.id.stat_trips), R.drawable.ic_settings_trip, String.valueOf(stats.trips), getString(R.string.trips));
+        bindStat(findViewById(R.id.stat_steps), R.drawable.ic_settings_location, String.valueOf(stats.steps), getString(R.string.steps));
+        bindStat(findViewById(R.id.stat_photos), R.drawable.ic_settings_photo, String.valueOf(stats.photos), getString(R.string.photos));
+        bindStat(findViewById(R.id.stat_days), R.drawable.ic_settings_calendar, String.valueOf(stats.days), getString(R.string.travel_days));
     }
 
     private void setupRows() {
-        bindRow(findViewById(R.id.row_profile), R.drawable.profile_menu_icon_profile, "Informations personnelles", "Gérer vos informations");
-        bindRow(findViewById(R.id.row_preferences), R.drawable.profile_menu_icon_preferences, "Préférences", "Langue, devise, notifications");
-        bindRow(findViewById(R.id.row_sync), R.drawable.profile_menu_icon_sync, "Données et synchronisation", "Sauvegarde et restauration");
-        bindRow(findViewById(R.id.row_help), R.drawable.profile_menu_icon_help, "Aide et support", "FAQ, contact, politiques");
-        bindRow(findViewById(R.id.row_privacy), R.drawable.profile_menu_icon_privacy, "Confidentialité et sécurité", "Gérer vos données personnelles");
-        bindRow(findViewById(R.id.row_logout), R.drawable.profile_menu_icon_logout, "Déconnexion", "Se déconnecter de votre compte");
+        bindRow(findViewById(R.id.row_profile), R.drawable.profile_menu_icon_profile, getString(R.string.personal_info), getString(R.string.profile_manage_info));
+        bindRow(findViewById(R.id.row_preferences), R.drawable.profile_menu_icon_preferences, getString(R.string.preferences), getString(R.string.language_currency_notifications));
+        bindRow(findViewById(R.id.row_sync), R.drawable.profile_menu_icon_sync, getString(R.string.data_sync), getString(R.string.backup_restore));
+        bindRow(findViewById(R.id.row_help), R.drawable.profile_menu_icon_help, getString(R.string.help_support), getString(R.string.faq_contact_policies));
+        bindRow(findViewById(R.id.row_privacy), R.drawable.profile_menu_icon_privacy, getString(R.string.privacy_security), getString(R.string.manage_personal_data));
+        bindRow(findViewById(R.id.row_logout), R.drawable.profile_menu_icon_logout, getString(R.string.logout), getString(R.string.logout_subtitle));
         findViewById(R.id.row_profile).setOnClickListener(v -> startActivity(new Intent(this, PersonalInfoActivity.class)));
         findViewById(R.id.btn_edit_photo).setOnClickListener(v -> startActivity(new Intent(this, PersonalInfoActivity.class)));
         findViewById(R.id.row_preferences).setOnClickListener(v -> startActivity(new Intent(this, PreferencesActivity.class)));
@@ -160,7 +166,7 @@ public class SettingsActivity extends AppCompatActivity {
         barParams.setMargins(dp(8), 0, dp(8), dp(7));
         root.addView(navigationBar, barParams);
 
-        String[] labels = {"Accueil", "Memories", "Explorer", "Notifications", "Profil"};
+        String[] labels = {getString(R.string.nav_home), getString(R.string.nav_memories), getString(R.string.nav_explorer), getString(R.string.notifications), getString(R.string.profile)};
         int[] icons = {
                 R.drawable.nav_home,
                 R.drawable.nav_memories,
@@ -237,7 +243,7 @@ public class SettingsActivity extends AppCompatActivity {
         view.findViewById(R.id.btn_logout_confirm).setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             profilePreferences.setLoggedOut();
-            Toast.makeText(this, "Déconnexion réussie", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SignInActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

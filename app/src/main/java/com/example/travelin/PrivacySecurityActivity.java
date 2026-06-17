@@ -15,6 +15,12 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 public class PrivacySecurityActivity extends AppCompatActivity {
     private ProfilePreferences preferences;
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

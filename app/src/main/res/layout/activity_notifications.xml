@@ -18,7 +18,7 @@
             android:layout_height="48dp"
             android:layout_gravity="start|center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Retour"
+            android:contentDescription="@string/back"
             android:padding="12dp"
             android:src="@drawable/ic_add_trip_back"
             app:tint="#073844" />
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Notifications"
+            android:text="@string/notifications"
             android:textColor="#073844"
             android:textSize="23sp"
             android:textStyle="bold" />

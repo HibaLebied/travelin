@@ -20,7 +20,7 @@
         android:gravity="center"
         android:paddingLeft="56dp"
         android:paddingRight="56dp"
-        android:text="Confidentialité et sécurité"
+        android:text="@string/privacy_security"
         android:textColor="#071827"
         android:textSize="18sp"
         android:textStyle="bold" />

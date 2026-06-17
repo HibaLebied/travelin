@@ -19,7 +19,7 @@
 
         <TextView
             style="@style/ProfilePageDescription"
-            android:text="Personnalisez votre expérience Travelin selon vos préférences." />
+            android:text="@string/preferences_intro" />
 
         <LinearLayout
             style="@style/ProfileSectionCard"
@@ -27,7 +27,7 @@
 
             <TextView
                 style="@style/ProfileSectionLabel"
-                android:text="RÉGLAGES GÉNÉRAUX" />
+                android:text="@string/general_settings" />
 
             <LinearLayout
                 android:id="@+id/row_language"
@@ -40,12 +40,12 @@
                 <TextView
                     style="@style/ProfileOptionTitle"
                     android:layout_weight="1"
-                    android:text="Langue" />
+                    android:text="@string/language" />
 
                 <TextView
                     android:id="@+id/txt_language_value"
                     style="@style/ProfileOptionValue"
-                    android:text="Français" />
+                    android:text="@string/french" />
             </LinearLayout>
 
             <LinearLayout
@@ -59,12 +59,12 @@
                 <TextView
                     style="@style/ProfileOptionTitle"
                     android:layout_weight="1"
-                    android:text="Devise" />
+                    android:text="@string/currency" />
 
                 <TextView
                     android:id="@+id/txt_currency_value"
                     style="@style/ProfileOptionValue"
-                    android:text="MAD (DH)" />
+                    android:text="@string/mad_currency" />
             </LinearLayout>
         </LinearLayout>
 
@@ -74,7 +74,7 @@
 
             <TextView
                 style="@style/ProfileSectionLabel"
-                android:text="NOTIFICATIONS &amp; ALERTES" />
+                android:text="@string/notifications_alerts" />
 
             <include
                 layout="@layout/item_switch_row"
@@ -90,7 +90,7 @@
 
             <TextView
                 style="@style/ProfileSectionLabel"
-                android:text="EXPÉRIENCE" />
+                android:text="@string/experience" />
 
             <include
                 layout="@layout/item_switch_row"
@@ -101,6 +101,6 @@
             android:id="@+id/btn_save_preferences"
             style="@style/ProfilePrimaryButton"
             android:layout_marginTop="26dp"
-            android:text="Enregistrer les préférences" />
+            android:text="@string/save_preferences" />
     </LinearLayout>
 </ScrollView>

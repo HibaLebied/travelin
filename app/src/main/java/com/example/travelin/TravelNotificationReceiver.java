@@ -17,40 +17,40 @@ public class TravelNotificationReceiver extends BroadcastReceiver {
         if (NotificationHelper.TYPE_DEPARTURE_TOMORROW.equals(type)) {
             NotificationHelper.showNotification(
                     context,
-                    "Voyage bientôt",
-                    "Votre voyage commence demain. Préparez vos affaires.",
+                    context.getString(R.string.notification_departure_title),
+                    context.getString(R.string.notification_departure_message),
                     NotificationHelper.TYPE_DEPARTURE_TOMORROW,
                     relatedId
             );
         } else if (NotificationHelper.TYPE_TRIP_TODAY.equals(type)) {
             NotificationHelper.showNotification(
                     context,
-                    "Bon voyage !",
-                    "Votre voyage commence aujourd’hui. Consultez vos étapes.",
+                    context.getString(R.string.notification_trip_today_title),
+                    context.getString(R.string.notification_trip_today_message),
                     NotificationHelper.TYPE_TRIP_TODAY,
                     relatedId
             );
         } else if (NotificationHelper.TYPE_STEP_TODAY.equals(type)) {
             NotificationHelper.showNotification(
                     context,
-                    "Étape prévue",
-                    "Vous avez une étape prévue aujourd’hui.",
+                    context.getString(R.string.notification_step_today_title),
+                    context.getString(R.string.notification_step_today_message),
                     NotificationHelper.TYPE_STEP_TODAY,
                     relatedId
             );
         } else if (NotificationHelper.TYPE_ADD_STEP_PHOTOS.equals(type)) {
             NotificationHelper.showNotification(
                     context,
-                    "Ajoutez vos souvenirs",
-                    "N’oubliez pas d’ajouter les photos de cette étape.",
+                    context.getString(R.string.notification_add_photos_title),
+                    context.getString(R.string.notification_add_photos_message),
                     NotificationHelper.TYPE_ADD_STEP_PHOTOS,
                     relatedId
             );
         } else if (NotificationHelper.TYPE_TRIP_FINISHED.equals(type)) {
             NotificationHelper.showNotification(
                     context,
-                    "Voyage terminé",
-                    "Votre voyage est terminé. Préparez votre récapitulatif.",
+                    context.getString(R.string.notification_finished_title),
+                    context.getString(R.string.notification_finished_message),
                     NotificationHelper.TYPE_TRIP_FINISHED,
                     relatedId
             );

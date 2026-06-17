@@ -50,6 +50,12 @@ public class TripDetailActivity extends AppCompatActivity {
     private int planningTitleIndex = -1;
     private int quickActionsTitleIndex = -1;
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +77,8 @@ public class TripDetailActivity extends AppCompatActivity {
         cachePlanningSectionIndexes();
 
         heroImage.setImageResource(imageRes);
-        titleText.setText(TextUtils.isEmpty(tripName) ? "Voyage" : tripName);
-        datesText.setText(TextUtils.isEmpty(tripDates) ? "Dates a definir" : tripDates);
+        titleText.setText(TextUtils.isEmpty(tripName) ? getString(R.string.trip_default_title) : tripName);
+        datesText.setText(TextUtils.isEmpty(tripDates) ? getString(R.string.date_to_define) : tripDates);
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -105,14 +111,14 @@ public class TripDetailActivity extends AppCompatActivity {
         });
         findViewById(R.id.btn_share_trip).setOnClickListener(v -> shareTrip());
         findViewById(R.id.btn_alert_trip).setOnClickListener(v ->
-                Toast.makeText(this, "Rappel de voyage active", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, getString(R.string.trip_reminder_enabled), Toast.LENGTH_SHORT).show());
         findViewById(R.id.card_call_hotel).setOnClickListener(v -> callHotel());
         findViewById(R.id.card_share_sms).setOnClickListener(v -> shareTrip());
     }
 
     private void showTripOptions(View anchor) {
         PopupMenu popupMenu = new PopupMenu(this, anchor);
-        popupMenu.getMenu().add("Supprimer ce voyage");
+        popupMenu.getMenu().add(getString(R.string.trip_delete_menu));
         popupMenu.setOnMenuItemClickListener(item -> {
             showDeleteTripConfirmation();
             return true;
@@ -122,10 +128,10 @@ public class TripDetailActivity extends AppCompatActivity {
 
     private void showDeleteTripConfirmation() {
         new AlertDialog.Builder(this)
-                .setTitle("Supprimer ce voyage ?")
-                .setMessage("Toutes les etapes, photos et informations de ce voyage seront supprimees.")
-                .setNegativeButton("Annuler", null)
-                .setPositiveButton("Supprimer", (dialog, which) -> deleteTrip())
+                .setTitle(getString(R.string.trip_delete_title))
+                .setMessage(getString(R.string.trip_delete_message))
+                .setNegativeButton(getString(R.string.cancel), null)
+                .setPositiveButton(getString(R.string.delete), (dialog, which) -> deleteTrip())
                 .show();
     }
 
@@ -139,12 +145,12 @@ public class TripDetailActivity extends AppCompatActivity {
 
         boolean deleted = tripDao.deleteTrip(tripId);
         if (!deleted) {
-            Toast.makeText(this, "Impossible de supprimer ce voyage", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.trip_delete_failed), Toast.LENGTH_SHORT).show();
             return;
         }
 
         deleteOwnedPhotos(photoUris);
-        Toast.makeText(this, "Voyage supprime", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.trip_deleted), Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
     }
@@ -260,9 +266,9 @@ public class TripDetailActivity extends AppCompatActivity {
             View child = detailContentContainer.getChildAt(i);
             if (child instanceof TextView) {
                 CharSequence text = ((TextView) child).getText();
-                if ("Planning du voyage".contentEquals(text)) {
+                if (getString(R.string.trip_planning).contentEquals(text)) {
                     planningTitleIndex = i;
-                } else if ("Quick Actions".contentEquals(text)) {
+                } else if (getString(R.string.quick_actions).contentEquals(text)) {
                     quickActionsTitleIndex = i;
                 }
             }
@@ -271,7 +277,7 @@ public class TripDetailActivity extends AppCompatActivity {
 
     private View createEmptyPlanningView() {
         TextView textView = new TextView(this);
-        textView.setText("Aucune étape ajoutée");
+        textView.setText(getString(R.string.no_steps_added));
         textView.setTextColor(0xFF29435C);
         textView.setTextSize(16);
         textView.setGravity(Gravity.CENTER);
@@ -323,7 +329,7 @@ public class TripDetailActivity extends AppCompatActivity {
         card.addView(textBlock, textBlockParams);
 
         TextView title = new TextView(this);
-        title.setText(TextUtils.isEmpty(step.getLocationName()) ? "Étape" : step.getLocationName());
+        title.setText(TextUtils.isEmpty(step.getLocationName()) ? getString(R.string.step_default) : step.getLocationName());
         title.setTextColor(0xFF071D2B);
         title.setTextSize(20);
         title.setTypeface(title.getTypeface(), Typeface.BOLD);
@@ -388,40 +394,40 @@ public class TripDetailActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(time)) {
             return time;
         }
-        return "Date a definir";
+        return getString(R.string.date_to_define);
     }
 
     private void shareTrip() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:"));
         intent.putExtra("sms_body", buildTripSummary());
-        startActivity(Intent.createChooser(intent, "Partager le recap par SMS"));
+        startActivity(Intent.createChooser(intent, getString(R.string.share_recap_sms)));
     }
 
     private String buildTripSummary() {
         StringBuilder summary = new StringBuilder();
-        summary.append("Recap voyage : ")
+        summary.append(getString(R.string.trip_summary_title))
                 .append(TextUtils.isEmpty(tripName) ? "Travelin" : tripName)
                 .append("\n");
 
         if (!TextUtils.isEmpty(tripDates)) {
-            summary.append("Dates : ").append(tripDates).append("\n");
+            summary.append(getString(R.string.trip_summary_dates)).append(tripDates).append("\n");
         }
 
         List<TripStep> steps = tripDao.getStepsForTrip(tripId);
         if (steps.isEmpty()) {
-            summary.append("\nAucune etape ajoutee.");
+            summary.append(getString(R.string.trip_summary_no_steps));
             return summary.toString();
         }
 
-        summary.append("\nEtapes :");
+        summary.append(getString(R.string.trip_summary_steps));
         for (int i = 0; i < steps.size(); i++) {
             TripStep step = steps.get(i);
             summary.append("\n").append(i + 1).append(". ")
-                    .append(TextUtils.isEmpty(step.getLocationName()) ? "Etape" : step.getLocationName());
+                    .append(TextUtils.isEmpty(step.getLocationName()) ? getString(R.string.step_default) : step.getLocationName());
 
             String dateTime = formatStepDateTime(step);
-            if (!TextUtils.isEmpty(dateTime) && !"Date a definir".equals(dateTime)) {
+            if (!TextUtils.isEmpty(dateTime) && !getString(R.string.date_to_define).equals(dateTime)) {
                 summary.append(" - ").append(dateTime);
             }
 
@@ -430,7 +436,7 @@ public class TripDetailActivity extends AppCompatActivity {
             }
 
             if (step.hasCoordinates()) {
-                summary.append("\n   Position : ")
+                summary.append(getString(R.string.position))
                         .append(step.getLatitude())
                         .append(", ")
                         .append(step.getLongitude());

@@ -28,7 +28,7 @@
             android:id="@+id/txt_row_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Titre"
+            android:text="@string/title_placeholder"
             android:textColor="#071827"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Sous-titre"
+            android:text="@string/subtitle_placeholder"
             android:textColor="#667085"
             android:textSize="14sp" />
     </LinearLayout>

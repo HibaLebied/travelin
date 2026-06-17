@@ -27,6 +27,12 @@ public class ContinentDestinationsActivity extends AppCompatActivity {
     private TextView errorText;
     private String continentName;
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +70,7 @@ public class ContinentDestinationsActivity extends AppCompatActivity {
 
         if (getSharedPreferences(ExploreRepository.PREFS_NAME, MODE_PRIVATE)
                 .getBoolean(ExploreRepository.KEY_OFFLINE_MODE, false)) {
-            Toast.makeText(this, "Mode hors ligne activé", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.offline_mode_active), Toast.LENGTH_SHORT).show();
         }
 
         repository.getExploreDestinations(new ExploreRepository.RepositoryCallback() {

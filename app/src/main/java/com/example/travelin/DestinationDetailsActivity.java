@@ -38,6 +38,12 @@ public class DestinationDetailsActivity extends AppCompatActivity {
         return intent;
     }
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +73,10 @@ public class DestinationDetailsActivity extends AppCompatActivity {
         backButton.setOnClickListener(view -> finish());
         nameText.setText(name);
         countryText.setText(country);
-        placesText.setText(placesCount + " lieux");
+        placesText.setText(getString(R.string.places_count, placesCount));
         descriptionText.setText(description);
-        themeText.setText("Thème : " + safeText(theme));
-        continentText.setText("Continent : " + safeText(continent));
+        themeText.setText(getString(R.string.theme_label, safeText(theme)));
+        continentText.setText(getString(R.string.continent_label, safeText(continent)));
 
         Glide.with(this)
                 .load(TextUtils.isEmpty(imageUrl) ? null : imageUrl)

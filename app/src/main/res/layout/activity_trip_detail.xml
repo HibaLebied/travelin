@@ -14,7 +14,7 @@
             android:id="@+id/img_detail_hero"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Photo du voyage"
+            android:contentDescription="@string/trip_photo"
             android:scaleType="centerCrop"
             android:src="@drawable/travel_beach_bg" />
 
@@ -31,7 +31,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Retour"
+            android:contentDescription="@string/back"
             android:padding="12dp"
             android:src="@drawable/ic_add_trip_back"
             app:tint="@color/white" />
@@ -44,7 +44,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Options du voyage"
+            android:contentDescription="@string/trip_options"
             android:padding="12dp"
             android:src="@drawable/ic_detail_more_vert"
             app:tint="@color/white" />
@@ -62,7 +62,7 @@
                 android:id="@+id/txt_detail_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Maldives Paradise"
+                android:text="@string/sample_trip_title"
                 android:textColor="@color/white"
                 android:textSize="32sp"
                 android:textStyle="bold" />
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Jun 15 - Jun 22, 2024"
+                android:text="@string/sample_trip_dates"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -97,7 +97,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="+  Ajouter une etape"
+            android:text="@string/add_step_button"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -108,7 +108,7 @@
             android:layout_height="54dp"
             android:layout_marginLeft="14dp"
             android:background="@drawable/detail_circle_button"
-            android:contentDescription="Partager le voyage"
+            android:contentDescription="@string/share_trip"
             android:padding="15dp"
             android:src="@drawable/ic_detail_share" />
 
@@ -118,7 +118,7 @@
             android:layout_height="54dp"
             android:layout_marginLeft="12dp"
             android:background="@drawable/detail_circle_button"
-            android:contentDescription="Alertes du voyage"
+            android:contentDescription="@string/trip_alerts"
             android:padding="15dp"
             android:src="@drawable/ic_detail_bell" />
     </LinearLayout>
@@ -161,7 +161,7 @@
                     android:background="@drawable/detail_map_background"
                     android:gravity="center"
                     android:padding="22dp"
-                    android:text="Aucune étape ajoutée"
+                    android:text="@string/no_steps_added"
                     android:textColor="#29435C"
                     android:textSize="18sp"
                     android:visibility="gone" />
@@ -171,7 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Planning du voyage"
+                android:text="@string/trip_planning"
                 android:textColor="#071D2B"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -208,7 +208,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Male International Airport"
+                        android:text="@string/sample_airport"
                         android:textColor="#071D2B"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -219,7 +219,7 @@
                         android:layout_marginTop="8dp"
                         android:drawableLeft="@drawable/ic_detail_clock"
                         android:drawablePadding="7dp"
-                        android:text="Jun 15, 10:00 AM"
+                        android:text="@string/sample_airport_time"
                         android:textColor="#6B7C93"
                         android:textSize="14sp" />
 
@@ -227,7 +227,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Arrival at airport, pickup arranged"
+                        android:text="@string/sample_airport_note"
                         android:textColor="#29435C"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -265,7 +265,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Conrad Maldives Rangali"
+                        android:text="@string/sample_hotel"
                         android:textColor="#071D2B"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -276,7 +276,7 @@
                         android:layout_marginTop="8dp"
                         android:drawableLeft="@drawable/ic_detail_clock"
                         android:drawablePadding="7dp"
-                        android:text="Jun 15, 2:00 PM"
+                        android:text="@string/sample_hotel_time"
                         android:textColor="#6B7C93"
                         android:textSize="14sp" />
 
@@ -284,7 +284,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Check-in to overwater villa"
+                        android:text="@string/sample_hotel_note"
                         android:textColor="#29435C"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -322,7 +322,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Underwater Restaurant"
+                        android:text="@string/sample_restaurant"
                         android:textColor="#071D2B"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -333,7 +333,7 @@
                         android:layout_marginTop="8dp"
                         android:drawableLeft="@drawable/ic_detail_clock"
                         android:drawablePadding="7dp"
-                        android:text="Jun 16, 7:00 PM"
+                        android:text="@string/sample_restaurant_time"
                         android:textColor="#6B7C93"
                         android:textSize="14sp" />
 
@@ -341,7 +341,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Dinner at Ithaa Undersea Restaurant"
+                        android:text="@string/sample_restaurant_note"
                         android:textColor="#29435C"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -379,7 +379,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Coral Reef Diving"
+                        android:text="@string/sample_diving"
                         android:textColor="#071D2B"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -390,7 +390,7 @@
                         android:layout_marginTop="8dp"
                         android:drawableLeft="@drawable/ic_detail_clock"
                         android:drawablePadding="7dp"
-                        android:text="Jun 18, 9:00 AM"
+                        android:text="@string/sample_diving_time"
                         android:textColor="#6B7C93"
                         android:textSize="14sp" />
 
@@ -398,7 +398,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Scuba diving experience"
+                        android:text="@string/sample_diving_note"
                         android:textColor="#29435C"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -408,7 +408,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Quick Actions"
+                android:text="@string/quick_actions"
                 android:textColor="#071D2B"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -450,7 +450,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:text="Call\nHotel"
+                        android:text="@string/call_hotel"
                         android:textColor="#071D2B"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -487,7 +487,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:text="Share via\nSMS"
+                        android:text="@string/share_via_sms"
                         android:textColor="#071D2B"
                         android:textSize="17sp"
                         android:textStyle="bold" />

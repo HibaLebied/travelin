@@ -83,10 +83,13 @@ public class ProfilePreferences {
     }
 
     public String getLanguage() {
-        return appPreferences.getString(
+        String language = appPreferences.getString(
                 ExploreRepository.KEY_LANGUAGE,
-                preferences.getString(ExploreRepository.KEY_LANGUAGE, "Français")
+                preferences.getString(ExploreRepository.KEY_LANGUAGE, LocaleHelper.LANG_FR)
         );
+        return LocaleHelper.LANG_EN.equals(language)
+                ? context.getString(R.string.english)
+                : context.getString(R.string.french);
     }
 
     public String getCurrency() {
@@ -113,6 +116,12 @@ public class ProfilePreferences {
     }
 
     public void putString(String key, String value) {
+        if (ExploreRepository.KEY_LANGUAGE.equals(key)) {
+            value = (LocaleHelper.LANG_EN.equals(value) || "English".equals(value))
+                    ? LocaleHelper.LANG_EN
+                    : LocaleHelper.LANG_FR;
+            LocaleHelper.setLanguage(context, value);
+        }
         preferences.edit().putString(key, value).apply();
         if (ExploreRepository.KEY_LANGUAGE.equals(key)
                 || ExploreRepository.KEY_CURRENCY.equals(key)

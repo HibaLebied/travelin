@@ -27,7 +27,7 @@
             android:layout_height="42dp"
             android:layout_gravity="end|top"
             android:background="@drawable/trip_type_close_background"
-            android:contentDescription="Fermer"
+            android:contentDescription="@string/close"
             android:padding="11dp"
             android:src="@drawable/ic_trip_close"
             app:tint="#5F6B76" />
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
-        android:text="Quel type de voyage&#10;voudriez-vous ajouter ?"
+        android:text="@string/trip_type_title"
         android:textColor="#073844"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -49,7 +49,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
-        android:text="Ne vous inqui&#233;tez pas, vous pouvez changer cela&#10;plus tard."
+        android:text="@string/trip_type_subtitle"
         android:textColor="#66717F"
         android:textSize="14sp" />
 
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_weight="1"
-            android:text="Je veux planifier un voyage futur"
+            android:text="@string/future_trip_option"
             android:textColor="#073844"
             android:textSize="14sp" />
     </LinearLayout>
@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_weight="1"
-            android:text="Je voyage"
+            android:text="@string/current_trip_option"
             android:textColor="#073844"
             android:textSize="14sp" />
     </LinearLayout>
@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_weight="1"
-            android:text="Je veux ajouter un voyage pass&#233;"
+            android:text="@string/past_trip_option"
             android:textColor="#073844"
             android:textSize="14sp" />
     </LinearLayout>
@@ -167,7 +167,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="30dp"
         android:enabled="false"
-        android:text="Continuer"
+        android:text="@string/continue_action"
         android:textAllCaps="false"
         android:textColor="#9FAEBD"
         android:textSize="16sp"
@@ -181,7 +181,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="12dp"
-        android:text="Annuler"
+        android:text="@string/cancel"
         android:textAllCaps="false"
         android:textColor="#073844"
         android:textSize="16sp"

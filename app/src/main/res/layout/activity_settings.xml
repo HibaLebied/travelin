@@ -31,7 +31,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="start|center_vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Retour"
+                    android:contentDescription="@string/back"
                     android:padding="12dp"
                     android:src="@drawable/ic_add_trip_back"
                     app:tint="#071827" />
@@ -42,7 +42,7 @@
                     android:gravity="center"
                     android:paddingLeft="56dp"
                     android:paddingRight="56dp"
-                    android:text="Profil"
+                    android:text="@string/profile"
                     android:textColor="#071827"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -90,7 +90,7 @@
                         android:layout_height="40dp"
                         android:layout_gravity="bottom|end"
                         android:background="@drawable/settings_fab_small_background"
-                        android:contentDescription="Modifier la photo"
+                        android:contentDescription="@string/edit_photo"
                         android:padding="10dp"
                         android:src="@drawable/ic_settings_edit"
                         app:tint="@color/white" />
@@ -107,7 +107,7 @@
                         android:id="@+id/txt_profile_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sarah Benali"
+                        android:text="@string/sample_name"
                         android:textColor="#071827"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -117,14 +117,14 @@
                         style="@style/ProfileInlineInfo"
                         android:drawableStart="@drawable/ic_settings_email"
                         android:drawableTint="#667085"
-                        android:text="sarah.benali@email.com" />
+                        android:text="@string/sample_email" />
 
                     <TextView
                         android:id="@+id/txt_profile_city"
                         style="@style/ProfileInlineInfo"
                         android:drawableStart="@drawable/ic_settings_location"
                         android:drawableTint="#667085"
-                        android:text="Casablanca, Maroc" />
+                        android:text="@string/sample_city" />
                 </LinearLayout>
             </LinearLayout>
 

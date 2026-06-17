@@ -11,6 +11,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class HelpSupportActivity extends AppCompatActivity {
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

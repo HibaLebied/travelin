@@ -58,7 +58,7 @@ public class ExploreDestinationAdapter
         ExploreDestination destination = destinations.get(position);
         holder.name.setText(destination.getName());
         holder.country.setText(destination.getCountry());
-        holder.places.setText(destination.getPlacesCount() + " lieux");
+        holder.places.setText(holder.itemView.getContext().getString(R.string.places_count, destination.getPlacesCount()));
 
         Glide.with(context)
                 .load(TextUtils.isEmpty(destination.getImageUrl())

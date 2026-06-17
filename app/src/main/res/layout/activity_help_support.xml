@@ -14,7 +14,7 @@
         <include layout="@layout/view_help_header" />
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:background="@drawable/settings_card_background" android:elevation="3dp" android:orientation="horizontal" android:padding="24dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Nous sommes là\npour vous aider\n\nTrouvez rapidement des réponses ou contactez notre équipe." android:textColor="#071827" android:textSize="20sp" android:textStyle="bold" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/help_intro" android:textColor="#071827" android:textSize="20sp" android:textStyle="bold" />
             <ImageView android:layout_width="118dp" android:layout_height="118dp" android:src="@drawable/ic_settings_contact" app:tint="@color/primary" />
         </LinearLayout>
 
@@ -27,9 +27,9 @@
         </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:background="@drawable/settings_card_background" android:elevation="3dp" android:orientation="vertical" android:padding="22dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Besoin d’aide supplémentaire ?" android:textColor="#071827" android:textSize="18sp" android:textStyle="bold" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="support@travelin.app" android:textColor="@color/primary" android:textSize="16sp" android:textStyle="bold" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/btn_contact_support" style="@style/ProfilePrimaryButton" android:layout_marginTop="18dp" android:text="Contacter le support" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/need_more_help" android:textColor="#071827" android:textSize="18sp" android:textStyle="bold" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="@string/support_email" android:textColor="@color/primary" android:textSize="16sp" android:textStyle="bold" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btn_contact_support" style="@style/ProfilePrimaryButton" android:layout_marginTop="18dp" android:text="@string/contact_support" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -41,7 +41,6 @@ public class SignInActivity extends Activity {
     private static final String KEY_LANGUAGE = "language";
     private static final String LANG_EN = "en";
     private static final String LANG_FR = "fr";
-    private static final String LANG_AR = "ar";
     private static final int RC_GOOGLE_SIGN_IN = 1001;
 
     private TextView languageText;
@@ -57,6 +56,12 @@ public class SignInActivity extends Activity {
     private FirebaseAuth auth;
     private GoogleSignInClient googleSignInClient;
     private CallbackManager callbackManager;
+
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -297,68 +302,51 @@ public class SignInActivity extends Activity {
 
     private void setLoading(boolean isLoading) {
         signInButton.setEnabled(!isLoading);
-        signInButton.setText(isLoading ? "Veuillez patienter..." : "Se connecter");
+        signInButton.setText(isLoading ? getString(R.string.wait) : getString(R.string.sign_in));
     }
 
     private void showLanguageMenu() {
         PopupMenu menu = new PopupMenu(this, languageText);
-        menu.getMenu().add("English");
-        menu.getMenu().add("Français");
-        menu.getMenu().add("العربية");
+        menu.getMenu().add(getString(R.string.english));
+        menu.getMenu().add(getString(R.string.french));
         menu.setOnMenuItemClickListener(item -> {
             String selected = item.getTitle().toString();
-            if ("Français".equals(selected)) {
+            if (getString(R.string.french).equals(selected)) {
                 saveLanguage(LANG_FR);
-                applyLanguage(LANG_FR);
-            } else if ("العربية".equals(selected)) {
-                saveLanguage(LANG_AR);
-                applyLanguage(LANG_AR);
             } else {
                 saveLanguage(LANG_EN);
-                applyLanguage(LANG_EN);
             }
+            recreate();
             return true;
         });
         menu.show();
     }
 
     private void applyLanguage(String language) {
-        boolean isArabic = LANG_AR.equals(language);
-        getWindow().getDecorView().setLayoutDirection(isArabic ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
         if (LANG_FR.equals(language)) {
-            languageText.setText("Français v");
-            setTitleWithPrimaryWord("Connecte-toi avec Travel.", "Travel");
-            subtitleText.setText("Découvre le monde à chaque\nconnexion");
-            emailEditText.setHint("E-mail ou numéro de téléphone");
-            passwordEditText.setHint("Mot de passe");
-            forgotPasswordText.setText("Mot de passe oublié ?");
-            signInButton.setText("Se connecter");
-            socialLabelText.setText("ou se connecter avec");
-            noAccountText.setText("Je n'ai pas de compte ?");
-            signUpButton.setText("Créer un compte");
-        } else if (isArabic) {
-            languageText.setText("العربية v");
-            setTitleWithPrimaryWord("سجّل دخولك مع Travelin", "Travelin");
-            subtitleText.setText("اكتشف العالم مع كل\nتسجيل دخول");
-            emailEditText.setHint("البريد الإلكتروني أو رقم الهاتف");
-            passwordEditText.setHint("كلمة المرور");
-            forgotPasswordText.setText("هل نسيت كلمة المرور؟");
-            signInButton.setText("تسجيل الدخول");
-            socialLabelText.setText("أو سجّل الدخول باستخدام");
-            noAccountText.setText("ليس لديك حساب؟");
-            signUpButton.setText("إنشاء حساب");
+            languageText.setText(getString(R.string.language_french_short));
+            setTitleWithPrimaryWord(getString(R.string.sign_in_title), "Travelin");
+            subtitleText.setText(getString(R.string.sign_in_subtitle));
+            emailEditText.setHint(getString(R.string.email_or_phone));
+            passwordEditText.setHint(getString(R.string.password));
+            forgotPasswordText.setText(getString(R.string.forgot_password));
+            signInButton.setText(getString(R.string.sign_in));
+            socialLabelText.setText(getString(R.string.or_sign_in_with));
+            noAccountText.setText(getString(R.string.no_account));
+            signUpButton.setText(getString(R.string.create_account));
         } else {
-            languageText.setText("Francais v");
-            setTitleWithPrimaryWord("Connecte-toi avec Travel.", "Travel");
-            subtitleText.setText("Decouvre le monde a chaque\nconnexion");
-            emailEditText.setHint("E-mail ou numero de telephone");
-            passwordEditText.setHint("Mot de passe");
-            forgotPasswordText.setText("Mot de passe oublie ?");
-            signInButton.setText("Se connecter");
-            socialLabelText.setText("ou se connecter avec");
-            noAccountText.setText("Je n'ai pas de compte ?");
-            signUpButton.setText("Creer un compte");
+            languageText.setText(getString(R.string.language_english_short));
+            setTitleWithPrimaryWord("Sign in with Travelin", "Travelin");
+            subtitleText.setText("Discover the world with every\nsign-in");
+            emailEditText.setHint("Email or phone number");
+            passwordEditText.setHint("Password");
+            forgotPasswordText.setText("Forgot password?");
+            signInButton.setText("Sign in");
+            socialLabelText.setText("or sign in with");
+            noAccountText.setText("Don’t have an account?");
+            signUpButton.setText("Create account");
         }
     }
 
@@ -373,14 +361,10 @@ public class SignInActivity extends Activity {
     }
 
     private String getSavedLanguage() {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        return preferences.getString(KEY_LANGUAGE, LANG_FR);
+        return LocaleHelper.getLanguage(this);
     }
 
     private void saveLanguage(String language) {
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .edit()
-                .putString(KEY_LANGUAGE, language)
-                .apply();
+        LocaleHelper.setLanguage(this, language);
     }
 }

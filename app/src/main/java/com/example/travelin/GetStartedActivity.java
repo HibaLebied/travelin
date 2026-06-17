@@ -14,11 +14,16 @@ public class GetStartedActivity extends Activity {
     private static final String KEY_LANGUAGE = "language";
     private static final String LANG_EN = "en";
     private static final String LANG_FR = "fr";
-    private static final String LANG_AR = "ar";
 
     private TextView languageText;
     private TextView titleText;
     private Button startButton;
+
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,54 +43,40 @@ public class GetStartedActivity extends Activity {
 
     private void showLanguageMenu() {
         PopupMenu menu = new PopupMenu(this, languageText);
-        menu.getMenu().add("English");
-        menu.getMenu().add("Francais");
-        menu.getMenu().add("العربية");
+        menu.getMenu().add(getString(R.string.english));
+        menu.getMenu().add(getString(R.string.french));
         menu.setOnMenuItemClickListener(item -> {
             String selected = item.getTitle().toString();
-            if ("Francais".equals(selected)) {
+            if (getString(R.string.french).equals(selected)) {
                 saveLanguage(LANG_FR);
-                applyLanguage(LANG_FR);
-            } else if ("العربية".equals(selected)) {
-                saveLanguage(LANG_AR);
-                applyLanguage(LANG_AR);
             } else {
                 saveLanguage(LANG_EN);
-                applyLanguage(LANG_EN);
             }
+            recreate();
             return true;
         });
         menu.show();
     }
 
     private void applyLanguage(String language) {
-        boolean isArabic = LANG_AR.equals(language);
-        getWindow().getDecorView().setLayoutDirection(isArabic ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
         if (LANG_FR.equals(language)) {
-            languageText.setText("Francais v");
-            titleText.setText("Pret a explorer\nau-dela des frontieres ?");
-            startButton.setText("Votre voyage commence ici");
-        } else if (isArabic) {
-            languageText.setText("العربية v");
-            titleText.setText("هل أنت مستعد للاستكشاف\nوراء الحدود؟");
-            startButton.setText("رحلتك تبدأ هنا");
+            languageText.setText(getString(R.string.language_french_short));
+            titleText.setText(getString(R.string.get_started_title));
+            startButton.setText(getString(R.string.journey_starts_here));
         } else {
-            languageText.setText("Francais v");
-            titleText.setText("Pret a explorer\nau-dela des frontieres ?");
-            startButton.setText("Votre voyage commence ici");
+            languageText.setText(getString(R.string.language_english_short));
+            titleText.setText("Ready to explore\nbeyond borders?");
+            startButton.setText("Your journey starts here");
         }
     }
 
     private String getSavedLanguage() {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        return preferences.getString(KEY_LANGUAGE, LANG_FR);
+        return LocaleHelper.getLanguage(this);
     }
 
     private void saveLanguage(String language) {
-        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .edit()
-                .putString(KEY_LANGUAGE, language)
-                .apply();
+        LocaleHelper.setLanguage(this, language);
     }
 }

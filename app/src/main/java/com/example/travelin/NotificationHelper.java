@@ -90,7 +90,7 @@ public final class NotificationHelper {
                     CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_HIGH
             );
-            channel.setDescription("Rappels et informations concernant vos voyages");
+            channel.setDescription(context.getString(R.string.notification_channel_description));
             if (manager != null) {
                 manager.createNotificationChannel(channel);
             }

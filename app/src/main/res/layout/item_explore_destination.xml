@@ -19,7 +19,7 @@
             android:id="@+id/img_destination"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Destination"
+            android:contentDescription="@string/destination"
             android:scaleType="centerCrop" />
 
         <ImageView
@@ -29,7 +29,7 @@
             android:layout_gravity="top|start"
             android:layout_margin="6dp"
             android:background="@drawable/placeholder_flag"
-            android:contentDescription="Drapeau"
+            android:contentDescription="@string/flag"
             android:scaleType="centerCrop" />
     </FrameLayout>
 

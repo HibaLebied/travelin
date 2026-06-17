@@ -19,7 +19,7 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Retour"
+                android:contentDescription="@string/back"
                 android:padding="11dp"
                 android:src="@drawable/ic_add_trip_back" />
 
@@ -75,7 +75,7 @@
             android:layout_height="52dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/rounded_button"
-            android:text="Réessayer"
+            android:text="@string/retry"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

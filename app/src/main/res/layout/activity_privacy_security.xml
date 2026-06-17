@@ -17,7 +17,7 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
             <include layout="@layout/view_privacy_header" />
-            <TextView style="@style/ProfilePageDescription" android:text="Gérez vos paramètres de confidentialité et sécurisez votre compte." />
+            <TextView style="@style/ProfilePageDescription" android:text="@string/privacy_intro" />
 
             <LinearLayout style="@style/ProfileSectionCard" android:layout_marginTop="26dp">
                 <include layout="@layout/item_action_row" android:id="@+id/row_change_password" />
@@ -30,8 +30,8 @@
             <LinearLayout android:id="@+id/row_delete_account" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:background="@drawable/settings_danger_card_background" android:clickable="true" android:focusable="true" android:foreground="?attr/selectableItemBackground" android:gravity="center_vertical" android:orientation="horizontal" android:padding="22dp">
                 <ImageView android:layout_width="52dp" android:layout_height="52dp" android:background="@drawable/settings_danger_icon_background" android:padding="13dp" android:src="@drawable/ic_settings_trash" app:tint="#E02424" />
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Supprimer mon compte" android:textColor="#D01515" android:textSize="18sp" android:textStyle="bold" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Supprimez définitivement votre compte et toutes vos données associées." android:textColor="#667085" android:textSize="14sp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/delete_account" android:textColor="#D01515" android:textSize="18sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="@string/delete_account_subtitle" android:textColor="#667085" android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

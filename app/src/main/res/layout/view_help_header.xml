@@ -20,7 +20,7 @@
         android:gravity="center"
         android:paddingLeft="56dp"
         android:paddingRight="56dp"
-        android:text="Aide et support"
+        android:text="@string/help_support"
         android:textColor="#071827"
         android:textSize="20sp"
         android:textStyle="bold" />

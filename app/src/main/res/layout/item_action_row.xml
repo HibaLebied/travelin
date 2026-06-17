@@ -12,8 +12,8 @@
     android:paddingRight="18dp">
     <ImageView android:id="@+id/img_action_icon" style="@style/ProfileOptionIcon" android:src="@drawable/ic_settings_help" />
     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:layout_weight="1" android:orientation="vertical">
-        <TextView android:id="@+id/txt_action_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Titre" android:textColor="#071827" android:textSize="17sp" android:textStyle="bold" />
-        <TextView android:id="@+id/txt_action_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Description" android:textColor="#667085" android:textSize="14sp" />
+        <TextView android:id="@+id/txt_action_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_placeholder" android:textColor="#071827" android:textSize="17sp" android:textStyle="bold" />
+        <TextView android:id="@+id/txt_action_subtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="@string/description" android:textColor="#667085" android:textSize="14sp" />
     </LinearLayout>
     <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_settings_chevron_right" app:tint="#667085" />
 </LinearLayout>

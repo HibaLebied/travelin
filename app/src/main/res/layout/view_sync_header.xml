@@ -20,7 +20,7 @@
         android:gravity="center"
         android:paddingLeft="56dp"
         android:paddingRight="56dp"
-        android:text="Données et synchronisation"
+        android:text="@string/data_sync"
         android:textColor="#071827"
         android:textSize="18sp"
         android:textStyle="bold" />

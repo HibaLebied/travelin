@@ -39,7 +39,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:contentDescription="Icône notification"
+                android:contentDescription="@string/notification_icon"
                 app:tint="@color/white" />
         </FrameLayout>
 

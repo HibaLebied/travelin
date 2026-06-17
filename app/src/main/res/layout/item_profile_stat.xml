@@ -31,7 +31,7 @@
         android:layout_marginTop="1dp"
         android:gravity="center"
         android:maxLines="2"
-        android:text="Voyages"
+        android:text="@string/trips"
         android:textColor="#071827"
         android:textSize="11sp" />
 </LinearLayout>

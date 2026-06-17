@@ -15,11 +15,12 @@ import java.util.Locale;
 
 public class TripDao {
     private static final SimpleDateFormat STORAGE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    private static final SimpleDateFormat DISPLAY_FORMAT = new SimpleDateFormat("dd MMM yyyy", Locale.FRENCH);
 
+    private final Context context;
     private final DatabaseHelper databaseHelper;
 
     public TripDao(Context context) {
+        this.context = context;
         databaseHelper = new DatabaseHelper(context);
     }
 
@@ -235,8 +236,8 @@ public class TripDao {
             cursor.close();
         }
 
-        applySections(upcoming, "A VENIR");
-        applySections(past, "VOYAGES PASSES");
+        applySections(upcoming, context.getString(R.string.upcoming_section));
+        applySections(past, context.getString(R.string.past_section));
         upcoming.addAll(past);
         return upcoming;
     }
@@ -398,7 +399,7 @@ public class TripDao {
         trip.setCoverPhotoPath(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_COVER_PHOTO_PATH)));
         trip.setCreatedAt(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CREATED_AT)));
         trip.setDates(formatDateRange(trip.getStartDate(), trip.getEndDate()));
-        trip.setLocations("1 lieu");
+        trip.setLocations(context.getString(R.string.places_count, 1));
         trip.setImageResId(Trip.TYPE_PAST.equals(trip.getTripType()) ? R.drawable.travel_balloons_bg : R.drawable.travel_beach_bg);
         if (TextUtils.isEmpty(trip.getName())) {
             trip.setName(trip.getDestination());
@@ -421,7 +422,7 @@ public class TripDao {
         if (!TextUtils.isEmpty(start)) {
             return start;
         }
-        return "Dates a definir";
+        return context.getString(R.string.date_to_define);
     }
 
     private String formatDate(String value) {
@@ -430,7 +431,8 @@ public class TripDao {
         }
         try {
             Date date = STORAGE_FORMAT.parse(value);
-            return date == null ? "" : DISPLAY_FORMAT.format(date);
+            SimpleDateFormat displayFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+            return date == null ? "" : displayFormat.format(date);
         } catch (ParseException e) {
             return value;
         }

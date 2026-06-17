@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Se déconnecter ?"
+        android:text="@string/logout_title"
         android:textColor="#071827"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:gravity="center"
-        android:text="Voulez-vous vraiment vous déconnecter de votre compte ?"
+        android:text="@string/logout_message"
         android:textColor="#667085"
         android:textSize="13sp" />
 
@@ -55,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Annuler"
+            android:text="@string/cancel"
             android:textColor="@color/primary"
             android:textSize="12sp"
             android:textAllCaps="false"
@@ -71,7 +71,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Oui, me déconnecter"
+            android:text="@string/logout_confirm"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textAllCaps="false"

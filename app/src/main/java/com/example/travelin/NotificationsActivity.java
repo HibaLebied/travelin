@@ -26,6 +26,12 @@ public class NotificationsActivity extends AppCompatActivity {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
             });
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +134,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private static void openStepEditor(Context context, long stepId) {
         TripStep step = new TripDao(context).getStepById(stepId);
         if (step == null) {
-            Toast.makeText(context, "Etape introuvable", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.step_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(context, AddStepActivity.class);

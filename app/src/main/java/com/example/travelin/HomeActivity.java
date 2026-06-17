@@ -94,6 +94,12 @@ public class HomeActivity extends AppCompatActivity {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
             });
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,7 +217,7 @@ public class HomeActivity extends AppCompatActivity {
         barParams.setMargins(dp(8), 0, dp(8), dp(7));
         root.addView(navigationBar, barParams);
 
-        String[] labels = {"Accueil", "Memories", "Explorer", "Notifications", "Profil"};
+        String[] labels = {getString(R.string.nav_home), getString(R.string.nav_memories), getString(R.string.nav_explorer), getString(R.string.notifications), getString(R.string.profile)};
         int[] icons = {
                 R.drawable.nav_home,
                 R.drawable.nav_memories,
@@ -430,19 +436,19 @@ public class HomeActivity extends AppCompatActivity {
         bindProfileStat(profileContent.findViewById(R.id.stat_trips),
                 R.drawable.ic_settings_trip,
                 String.valueOf(stats.trips),
-                "Voyages");
+                getString(R.string.trips));
         bindProfileStat(profileContent.findViewById(R.id.stat_steps),
                 R.drawable.ic_settings_location,
                 String.valueOf(stats.steps),
-                "Étapes");
+                getString(R.string.steps));
         bindProfileStat(profileContent.findViewById(R.id.stat_photos),
                 R.drawable.ic_settings_photo,
                 String.valueOf(stats.photos),
-                "Photos");
+                getString(R.string.photos));
         bindProfileStat(profileContent.findViewById(R.id.stat_days),
                 R.drawable.ic_settings_calendar,
                 String.valueOf(stats.days),
-                "Jours de voyage");
+                getString(R.string.travel_days));
     }
 
     private void bindProfileStat(View root, int iconRes, String value, String label) {
@@ -465,7 +471,7 @@ public class HomeActivity extends AppCompatActivity {
         view.findViewById(R.id.btn_logout_confirm).setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             profilePreferences.setLoggedOut();
-            Toast.makeText(this, "Déconnexion réussie", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SignInActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -511,14 +517,14 @@ public class HomeActivity extends AppCompatActivity {
         getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true);
         backButton.setBackgroundResource(ripple.resourceId);
         backButton.setPadding(dp(12), dp(12), dp(12), dp(12));
-        backButton.setContentDescription("Retour");
+        backButton.setContentDescription(getString(R.string.back));
         backButton.setOnClickListener(view -> {
             selectNavigationItem(0);
             showHomeContent();
         });
         header.addView(backButton, new FrameLayout.LayoutParams(dp(48), dp(48), Gravity.START | Gravity.CENTER_VERTICAL));
 
-        TextView headerTitle = createText("Memories", 24, darkText, true);
+        TextView headerTitle = createText(getString(R.string.nav_memories), 24, darkText, true);
         headerTitle.setGravity(Gravity.CENTER);
         header.addView(headerTitle, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
 
@@ -544,7 +550,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void addRecentMemoriesSection(LinearLayout content, List<StepMemoryPhoto> memories) {
-        addMemorySectionHeader(content, "Souvenirs recents");
+        addMemorySectionHeader(content, getString(R.string.recent_memories));
         HorizontalScrollView recentScroll = new HorizontalScrollView(this);
         recentScroll.setHorizontalScrollBarEnabled(false);
         recentScroll.setClipToPadding(false);
@@ -571,13 +577,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void addJournalSection(LinearLayout content) {
-        addMemorySectionHeader(content, "Journal de voyage");
+        addMemorySectionHeader(content, getString(R.string.travel_journal));
         content.addView(createJournalCard(R.drawable.add_trip_mountain_cover, "Balade dans la medina", "Perdu dans les ruelles colorees de Marrakech. Des odeurs d'epices, des sourires partout...", "14 avr. 2025"));
         content.addView(createJournalCard(R.drawable.travel_balloons_bg, "Coucher de soleil au desert", "Un moment suspendu dans le temps. Le ciel s'embrase et le silence est magique.", "16 avr. 2025"));
     }
 
     private void addFavoriteMomentsSection(LinearLayout content, List<StepMemoryPhoto> memories) {
-        addMemorySectionHeader(content, "Moments favoris");
+        addMemorySectionHeader(content, getString(R.string.favorite_moments));
         GridLayout favoritesGrid = new GridLayout(this);
         favoritesGrid.setColumnCount(2);
         favoritesGrid.setUseDefaultMargins(false);
@@ -597,7 +603,7 @@ public class HomeActivity extends AppCompatActivity {
             favoritesGrid.addView(createMemoryTile(memories.get(index), dp(128)));
         }
 
-        TextView loadMoreButton = createText("Charger plus de photos", 16, Color.WHITE, true);
+        TextView loadMoreButton = createText(getString(R.string.load_more_photos), 16, Color.WHITE, true);
         loadMoreButton.setGravity(Gravity.CENTER);
         loadMoreButton.setClickable(true);
         loadMoreButton.setFocusable(true);
@@ -631,7 +637,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView titleView = createText(title, 20, Color.rgb(5, 18, 49), true);
         row.addView(titleView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView seeAll = createText("Voir tout  >", 15, NAV_ACTIVE_COLOR, false);
+        TextView seeAll = createText(getString(R.string.see_all), 15, NAV_ACTIVE_COLOR, false);
         seeAll.setGravity(Gravity.CENTER_VERTICAL);
         seeAll.setClickable(true);
         seeAll.setFocusable(true);
@@ -640,7 +646,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private View createRecentMemoryCard(StepMemoryPhoto memory) {
         String title = TextUtils.isEmpty(memory.getStepName()) ? (TextUtils.isEmpty(memory.getTripName()) ? memory.getDestination() : memory.getTripName()) : memory.getStepName();
-        return createRecentMemoryCard(Uri.parse(memory.getPhotoUri()), title, memory.getDate(), "1 photo");
+        return createRecentMemoryCard(Uri.parse(memory.getPhotoUri()), title, memory.getDate(), getString(R.string.places_count, 1).replace("lieux", "photo").replace("places", "photo"));
     }
 
     private View createRecentMemoryCard(int imageResId, String title, String date, String photos) {
@@ -676,13 +682,13 @@ public class HomeActivity extends AppCompatActivity {
         info.setPadding(dp(16), 0, dp(14), dp(16));
         card.addView(info, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM));
 
-        TextView titleView = createText(TextUtils.isEmpty(title) ? "Souvenir" : title, 19, Color.WHITE, true);
+        TextView titleView = createText(TextUtils.isEmpty(title) ? getString(R.string.memory) : title, 19, Color.WHITE, true);
         titleView.setSingleLine(true);
         titleView.setEllipsize(TruncateAt.END);
         titleView.setIncludeFontPadding(false);
         info.addView(titleView);
 
-        TextView dateLine = createIconLine(R.drawable.ic_settings_calendar, TextUtils.isEmpty(date) ? "Date a definir" : date, Color.WHITE, 14);
+        TextView dateLine = createIconLine(R.drawable.ic_settings_calendar, TextUtils.isEmpty(date) ? getString(R.string.date_to_define) : date, Color.WHITE, 14);
         dateLine.setIncludeFontPadding(false);
         LinearLayout.LayoutParams dateParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dateParams.setMargins(0, dp(6), 0, dp(8));
@@ -884,14 +890,14 @@ public class HomeActivity extends AppCompatActivity {
         info.setClickable(false);
 
         TextView placeText = new TextView(this);
-        placeText.setText(TextUtils.isEmpty(place) ? "Souvenir" : place);
+        placeText.setText(TextUtils.isEmpty(place) ? getString(R.string.memory) : place);
         placeText.setTextColor(Color.WHITE);
         placeText.setTextSize(16);
         placeText.setTypeface(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD);
         info.addView(placeText);
 
         TextView dateText = new TextView(this);
-        dateText.setText(TextUtils.isEmpty(date) ? "Date a definir" : date);
+        dateText.setText(TextUtils.isEmpty(date) ? getString(R.string.date_to_define) : date);
         dateText.setTextColor(Color.WHITE);
         dateText.setTextSize(14);
         dateText.setPadding(0, dp(6), 0, 0);
@@ -1054,7 +1060,7 @@ public class HomeActivity extends AppCompatActivity {
         explorerErrorView.setGravity(Gravity.CENTER);
         explorerErrorView.setPadding(dp(24), dp(24), dp(24), dp(24));
         explorerErrorText = createExplorerText(
-                "Impossible de charger les destinations",
+                getString(R.string.unable_load_destinations),
                 16,
                 Color.rgb(7, 56, 68),
                 true
@@ -1063,7 +1069,7 @@ public class HomeActivity extends AppCompatActivity {
         explorerErrorView.addView(explorerErrorText);
 
         Button retryButton = new Button(this);
-        retryButton.setText("Réessayer");
+        retryButton.setText(getString(R.string.retry));
         retryButton.setTextColor(Color.WHITE);
         retryButton.setAllCaps(false);
         retryButton.setBackground(createRoundedBackground(NAV_ACTIVE_COLOR, 12));
@@ -1096,14 +1102,14 @@ public class HomeActivity extends AppCompatActivity {
         backButton.setScaleType(ImageView.ScaleType.CENTER);
         backButton.setPadding(dp(15), dp(15), dp(15), dp(15));
         backButton.setBackgroundColor(Color.TRANSPARENT);
-        backButton.setContentDescription("Retour");
+        backButton.setContentDescription(getString(R.string.back));
         backButton.setOnClickListener(view -> {
             selectNavigationItem(0);
             showHomeContent();
         });
         topBar.addView(backButton, new LinearLayout.LayoutParams(dp(54), dp(54)));
 
-        TextView pageTitle = createExplorerText("Explorer", 23, Color.rgb(7, 56, 68), true);
+        TextView pageTitle = createExplorerText(getString(R.string.nav_explorer), 23, Color.rgb(7, 56, 68), true);
         pageTitle.setGravity(Gravity.CENTER);
         topBar.addView(pageTitle, new LinearLayout.LayoutParams(0, dp(54), 1));
 
@@ -1117,7 +1123,7 @@ public class HomeActivity extends AppCompatActivity {
         explorerBody.addView(topBar);
 
         if (!featured.isEmpty()) {
-            explorerBody.addView(createSectionTitle("Pour vous"));
+            explorerBody.addView(createSectionTitle(getString(R.string.for_you)));
             HorizontalScrollView featuredScroll = createHorizontalScroll();
             LinearLayout featuredRow = createHorizontalRow();
             int featuredWidth = getResources().getDisplayMetrics().widthPixels - dp(100);
@@ -1129,7 +1135,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         if (!popular.isEmpty()) {
-            explorerBody.addView(createSectionTitle("Populaires"));
+            explorerBody.addView(createSectionTitle(getString(R.string.popular)));
             HorizontalScrollView popularScroll = createHorizontalScroll();
             LinearLayout popularRow = createHorizontalRow();
             for (ExploreDestination destination : popular) {
@@ -1140,7 +1146,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         if (!trends.isEmpty()) {
-            explorerBody.addView(createSectionTitle("Tendances du mois"));
+            explorerBody.addView(createSectionTitle(getString(R.string.trends_month)));
             HorizontalScrollView trendingScroll = createHorizontalScroll();
             LinearLayout trendingPages = createHorizontalRow();
             int trendingPageWidth = getResources().getDisplayMetrics().widthPixels - dp(104);
@@ -1173,7 +1179,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
         if (!continents.isEmpty()) {
-            explorerBody.addView(createSectionTitle("Parcourir par continent"));
+            explorerBody.addView(createSectionTitle(getString(R.string.browse_by_continent)));
             LinearLayout grid = new LinearLayout(this);
             grid.setOrientation(LinearLayout.VERTICAL);
             int[] colors = {
@@ -1275,9 +1281,9 @@ public class HomeActivity extends AppCompatActivity {
         textBlock.setOrientation(LinearLayout.VERTICAL);
         textBlock.setPadding(dp(18), 0, dp(18), dp(18));
         textBlock.setGravity(Gravity.BOTTOM);
-        textBlock.addView(createExplorerText("POPULAIRES", 10, Color.WHITE, true));
+        textBlock.addView(createExplorerText(getString(R.string.popular_upper), 10, Color.WHITE, true));
         textBlock.addView(createExplorerText(destination.getName(), 23, Color.WHITE, true));
-        textBlock.addView(createExplorerText(destination.getPlacesCount() + " lieux", 11, Color.WHITE, true));
+        textBlock.addView(createExplorerText(getString(R.string.places_count, destination.getPlacesCount()), 11, Color.WHITE, true));
         card.addView(textBlock, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -1332,7 +1338,7 @@ public class HomeActivity extends AppCompatActivity {
         ));
 
         TextView count = createExplorerText(
-                (destination.getPlacesCount() + " lieux").toUpperCase(),
+                (getString(R.string.places_count, destination.getPlacesCount())).toUpperCase(),
                 11,
                 NAV_INACTIVE_COLOR,
                 true
@@ -1498,7 +1504,7 @@ public class HomeActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(ExploreRepository.PREFS_NAME, MODE_PRIVATE);
         if (preferences.getBoolean(ExploreRepository.KEY_OFFLINE_MODE, false)) {
-            Toast.makeText(this, "Mode hors ligne activé", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.offline_mode_active), Toast.LENGTH_SHORT).show();
         }
 
         exploreRepository.getExploreDestinations(new ExploreRepository.RepositoryCallback() {
@@ -1665,7 +1671,7 @@ public class HomeActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(name)) {
             name = getConnectedUserName();
         }
-        greetingText.setText("Bonjour, " + name);
+        greetingText.setText(getString(R.string.hello_user, name));
         initialsText.setText(getInitials(name));
 
         String photoUri = profilePreferences == null ? "" : profilePreferences.getPhotoUri();
@@ -1693,7 +1699,7 @@ public class HomeActivity extends AppCompatActivity {
     private String getConnectedUserName() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            return "Voyageur";
+            return getString(R.string.traveler);
         }
 
         String displayName = user.getDisplayName();
@@ -1706,7 +1712,7 @@ public class HomeActivity extends AppCompatActivity {
             return email.substring(0, email.indexOf("@")).trim();
         }
 
-        return "Voyageur";
+        return getString(R.string.traveler);
     }
 
     private String getConnectedUserId() {
@@ -1768,10 +1774,10 @@ public class HomeActivity extends AppCompatActivity {
                     || "VOYAGES PASSES".equals(trip.getSection())
                     || "PAST TRIPS".equals(trip.getSection());
             if (past) {
-                trip.setSection(hasPastSection ? null : "VOYAGES PASSES");
+                trip.setSection(hasPastSection ? null : getString(R.string.past_section));
                 hasPastSection = true;
             } else {
-                trip.setSection(hasUpcomingSection ? null : "A VENIR");
+                trip.setSection(hasUpcomingSection ? null : getString(R.string.upcoming_section));
                 hasUpcomingSection = true;
             }
         }

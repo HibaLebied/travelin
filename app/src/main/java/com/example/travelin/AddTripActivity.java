@@ -65,6 +65,12 @@ public class AddTripActivity extends AppCompatActivity {
                 coverImageView.setImageURI(uri);
             });
 
+
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,27 +118,27 @@ public class AddTripActivity extends AppCompatActivity {
         actionsContainer.removeAllViews();
 
         if (Trip.TYPE_CURRENT.equals(tripType)) {
-            destinationEditText = addField(R.drawable.ic_field_destination, "Destination actuelle", "Ex. : Marrakech, Maroc", false);
-            hotelNameEditText = addField(R.drawable.ic_field_hotel, "Hotel actuel", "Ex. : Hotel Name", false);
-            hotelAddressEditText = addField(R.drawable.ic_field_hotel_address, "Adresse de l'hotel", "Ex. : 12 Rue Mohammed V, Marrakech", false);
-            hotelPhoneEditText = addField(R.drawable.ic_field_phone, "Telephone de l'hotel", "Ex. : +212 6XX XXX XXX", false);
-            notesEditText = addField(R.drawable.ic_field_notes, "Notes", "Ajouter des notes...", true);
-            addActionButton(R.drawable.ic_action_add_step, "Ajouter une etape\nmaintenant", v -> saveTripAndOpenStep());
-            addActionButton(R.drawable.ic_action_take_photo, "Prendre une photo", v -> openCoverPhotoPicker());
+            destinationEditText = addField(R.drawable.ic_field_destination, getString(R.string.current_destination), getString(R.string.current_destination_hint), false);
+            hotelNameEditText = addField(R.drawable.ic_field_hotel, getString(R.string.current_hotel), getString(R.string.hotel_name_hint), false);
+            hotelAddressEditText = addField(R.drawable.ic_field_hotel_address, getString(R.string.hotel_address), getString(R.string.hotel_address_hint), false);
+            hotelPhoneEditText = addField(R.drawable.ic_field_phone, getString(R.string.hotel_phone), getString(R.string.hotel_phone_hint), false);
+            notesEditText = addField(R.drawable.ic_field_notes, getString(R.string.notes), getString(R.string.notes_hint), true);
+            addActionButton(R.drawable.ic_action_add_step, getString(R.string.add_step_now), v -> saveTripAndOpenStep());
+            addActionButton(R.drawable.ic_action_take_photo, getString(R.string.take_photo), v -> openCoverPhotoPicker());
         } else if (Trip.TYPE_PAST.equals(tripType)) {
-            destinationEditText = addField(R.drawable.ic_field_destination, "Destination", "Ex. : Paris, France", false);
-            tripNameEditText = addField(R.drawable.ic_field_trip_name, "Nom du voyage", "Ex. : Voyage a Paris", false);
-            notesEditText = addField(R.drawable.ic_field_notes, "Notes souvenirs", "Decrivez vos souvenirs...", true);
-            addActionButton(R.drawable.ic_action_photos_memories, "Ajouter des photos\nsouvenirs", v -> openCoverPhotoPicker());
-            addActionButton(R.drawable.ic_action_visited_steps, "Ajouter des etapes\nvisitees", v -> saveTripAndOpenStep());
+            destinationEditText = addField(R.drawable.ic_field_destination, getString(R.string.destination), getString(R.string.destination_paris_hint), false);
+            tripNameEditText = addField(R.drawable.ic_field_trip_name, getString(R.string.trip_name), getString(R.string.trip_name_paris_hint), false);
+            notesEditText = addField(R.drawable.ic_field_notes, getString(R.string.past_notes), getString(R.string.past_notes_hint), true);
+            addActionButton(R.drawable.ic_action_photos_memories, getString(R.string.add_memory_photos), v -> openCoverPhotoPicker());
+            addActionButton(R.drawable.ic_action_visited_steps, getString(R.string.add_visited_steps), v -> saveTripAndOpenStep());
         } else {
-            destinationEditText = addField(R.drawable.ic_field_destination, "Destination", "Ex. : Istanbul, Turquie", false);
-            tripNameEditText = addField(R.drawable.ic_field_trip_name, "Nom du voyage", "Ex. : Vacances d'ete 2024", false);
-            hotelNameEditText = addField(R.drawable.ic_field_hotel, "Nom de l'hotel", "Ex. : Hotel Name", false);
-            hotelAddressEditText = addField(R.drawable.ic_field_hotel_address, "Adresse de l'hotel", "Ex. : 12 Rue Mohammed V, Marrakech", false);
-            hotelPhoneEditText = addField(R.drawable.ic_field_phone, "Telephone de l'hotel", "Ex. : +90 532 123 45 67", false);
-            notesEditText = addField(R.drawable.ic_field_notes, "Notes", "Ajouter des notes...", true);
-            addWideActionButton(R.drawable.ic_add_trip_flight_route_image, "Ajouter des etapes prevues", v -> saveTripAndOpenStep());
+            destinationEditText = addField(R.drawable.ic_field_destination, getString(R.string.destination), getString(R.string.destination_istanbul_hint), false);
+            tripNameEditText = addField(R.drawable.ic_field_trip_name, getString(R.string.trip_name), getString(R.string.trip_name_vacation_hint), false);
+            hotelNameEditText = addField(R.drawable.ic_field_hotel, getString(R.string.hotel_name), getString(R.string.hotel_name_hint), false);
+            hotelAddressEditText = addField(R.drawable.ic_field_hotel_address, getString(R.string.hotel_address), getString(R.string.hotel_address_hint), false);
+            hotelPhoneEditText = addField(R.drawable.ic_field_phone, getString(R.string.hotel_phone), getString(R.string.hotel_phone_hint_turkey), false);
+            notesEditText = addField(R.drawable.ic_field_notes, getString(R.string.notes), getString(R.string.notes_hint), true);
+            addWideActionButton(R.drawable.ic_add_trip_flight_route_image, getString(R.string.add_planned_steps), v -> saveTripAndOpenStep());
         }
     }
 
@@ -238,7 +244,7 @@ public class AddTripActivity extends AppCompatActivity {
     }
 
     private void showPhotoMenu() {
-        String[] options = {"Galerie", "Prendre une photo", "Annuler"};
+        String[] options = {getString(R.string.gallery), getString(R.string.take_photo), getString(R.string.cancel)};
         new AlertDialog.Builder(this)
                 .setItems(options, (dialog, which) -> {
                     if (which == 2) {
@@ -306,11 +312,11 @@ public class AddTripActivity extends AppCompatActivity {
 
         long id = insertTripFromForm();
         if (id == -1) {
-            Toast.makeText(this, "Impossible d'enregistrer le voyage", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.trip_save_failed), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(this, "Voyage enregistre", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.trip_saved), Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -321,7 +327,7 @@ public class AddTripActivity extends AppCompatActivity {
 
         long id = insertTripFromForm();
         if (id == -1) {
-            Toast.makeText(this, "Impossible d'enregistrer le voyage", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.trip_save_failed), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -358,27 +364,27 @@ public class AddTripActivity extends AppCompatActivity {
 
     private boolean validateRequiredFields() {
         if (isEmpty(destinationEditText)) {
-            destinationEditText.setError("Champ obligatoire");
+            destinationEditText.setError(getString(R.string.required_field));
             return false;
         }
 
         if ((Trip.TYPE_FUTURE.equals(tripType) || Trip.TYPE_PAST.equals(tripType)) && isEmpty(tripNameEditText)) {
-            tripNameEditText.setError("Champ obligatoire");
+            tripNameEditText.setError(getString(R.string.required_field));
             return false;
         }
 
         if (!Trip.TYPE_CURRENT.equals(tripType) && startCalendar == null) {
-            Toast.makeText(this, "Choisissez la date de debut", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.choose_start_date), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (Trip.TYPE_PAST.equals(tripType) && endCalendar == null) {
-            Toast.makeText(this, "Choisissez la date de fin", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.choose_end_date), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (startCalendar != null && endCalendar != null && endCalendar.before(startCalendar)) {
-            Toast.makeText(this, "La date de fin doit etre apres la date de debut", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.end_date_after_start), Toast.LENGTH_SHORT).show();
             return false;
         }
 

@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Pret a explorer&#10;au-dela des frontieres ?"
+            android:text="@string/get_started_title"
             android:textColor="@color/primary"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -51,7 +51,7 @@
             android:layout_marginTop="28dp"
             android:background="@drawable/rounded_button"
             android:stateListAnimator="@null"
-            android:text="Votre voyage commence ici"
+            android:text="@string/journey_starts_here"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -68,7 +68,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="8dp"
-        android:text="Francais v"
+        android:text="@string/language_french_short"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />

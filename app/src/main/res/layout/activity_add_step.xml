@@ -19,7 +19,7 @@
             android:layout_height="48dp"
             android:layout_gravity="start|center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Retour"
+            android:contentDescription="@string/back"
             android:padding="12dp"
             android:src="@drawable/ic_add_trip_back"
             app:tint="#073844" />
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Ajouter une étape"
+            android:text="@string/add_step_title"
             android:textColor="#073844"
             android:textSize="23sp"
             android:textStyle="bold" />
@@ -56,7 +56,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nom du lieu"
+                android:text="@string/place_name"
                 android:textColor="#071D2B"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -71,7 +71,7 @@
                 android:drawableLeft="@drawable/ic_detail_pin"
                 android:drawablePadding="12dp"
                 android:dropDownHeight="wrap_content"
-                android:hint="Ex. : Tour Eiffel"
+                android:hint="@string/place_name_hint"
                 android:imeOptions="actionDone"
                 android:inputType="textCapWords"
                 android:paddingLeft="18dp"
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:text="Description"
+                android:text="@string/description"
                 android:textColor="#071D2B"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -97,7 +97,7 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/add_step_field_background"
                 android:gravity="top|start"
-                android:hint="Que prevoyez-vous de faire ici ?"
+                android:hint="@string/step_description_hint"
                 android:inputType="textMultiLine|textCapSentences"
                 android:paddingLeft="18dp"
                 android:paddingTop="18dp"
@@ -123,7 +123,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Date"
+                        android:text="@string/date"
                         android:textColor="#071D2B"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -137,7 +137,7 @@
                         android:drawableLeft="@drawable/ic_detail_calendar"
                         android:drawableRight="@drawable/ic_detail_calendar"
                         android:drawablePadding="8dp"
-                        android:hint="jj/mm/aaaa"
+                        android:hint="@string/date_hint"
                         android:inputType="date"
                         android:paddingLeft="18dp"
                         android:paddingRight="16dp"
@@ -156,7 +156,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Heure"
+                        android:text="@string/time"
                         android:textColor="#071D2B"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -170,7 +170,7 @@
                         android:drawableLeft="@drawable/ic_detail_clock"
                         android:drawableRight="@drawable/ic_detail_clock"
                         android:drawablePadding="8dp"
-                        android:hint="--:--"
+                        android:hint="@string/time_hint"
                         android:inputType="time"
                         android:paddingLeft="18dp"
                         android:paddingRight="16dp"
@@ -184,7 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:text="Lieu sur la carte"
+                android:text="@string/map_location"
                 android:textColor="#071D2B"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -232,7 +232,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Appuyez pour choisir le lieu"
+                        android:text="@string/tap_to_choose_place"
                         android:textColor="#29435C"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -242,7 +242,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:text="Ajouter des photos"
+                android:text="@string/add_photos"
                 android:textColor="#071D2B"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -275,7 +275,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Importer des photos"
+                    android:text="@string/import_photos"
                     android:textColor="#29435C"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -284,7 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="JPG, PNG jusqu'a 10 Mo"
+                    android:text="@string/photo_file_help"
                     android:textColor="#8A96A3"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -311,7 +311,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="Enregistrer l'etape"
+                    android:text="@string/save_step"
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="bold" />
